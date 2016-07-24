@@ -1,5 +1,7 @@
 package pandora.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pandora.domain.CollectibleCollection;
@@ -12,20 +14,34 @@ public class CollectibleCollectionService {
     @Autowired
     private CollectibleCollectionRepository collectibleCollectionRepository;
 
-    public Object findAll(User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<CollectibleCollection> findAll(User currentUser) {
+        if(currentUser == null) {
+            throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
+        }
+        if(currentUser.isIsAdmin()) {
+            return collectibleCollectionRepository.findAll();
+        } else {
+            return collectibleCollectionRepository.findByUserId(currentUser.getId());
+        }
     }
 
     public CollectibleCollection save(CollectibleCollection collectibleCollection, User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(currentUser == null) {
+            throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
+        }
+        collectibleCollection.setUser(currentUser);
+        collectibleCollection = collectibleCollectionRepository.save(collectibleCollection);
+        return collectibleCollection;
     }
 
     public CollectibleCollection findOne(Long id, User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return collectibleCollectionRepository.findOne(id);
     }
 
     public CollectibleCollection delete(Long id, User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CollectibleCollection collectibleCollection = collectibleCollectionRepository.findOne(id);
+        collectibleCollectionRepository.delete(id);
+        return collectibleCollection;
     }
     
 }

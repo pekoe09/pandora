@@ -1,16 +1,29 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
     <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pandora - kokoelmat</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-        <div>TODO write content</div>
+        <div th:fragment="content">
+            <h1>Kokoelmat</h1>
+            
+            <a class="btn btn-primary" href="#" th:href="@{/kokoelmat/lisaa}">
+                Lisää uusi kokoelma
+            </a>
+            
+            <article class="listing-s" th:each="collection : ${collectibleCollections}">
+                <span class="listing-s-header">
+                    <a href="#" th:href="@{/kokoelmat/{id}(id=${collection.id})}" th:text="${collection.name}"></a>
+                </span>             
+                <form class="form-inline listing-buttons" action="#" th:action="@{/kokoelmat/{id}/poista(id=${collection.id})}" method="post">
+                    <a href="#" th:href="@{/kokoelmat/{id}/muokkaa(id=${collection.id})}" class="btn btn-primary">Muokkaa</a>
+                    <input type="submit" value="Poista" class="btn btn-danger" />
+                </form>
+            </article>   
+
+        </div>
     </body>
+
 </html>

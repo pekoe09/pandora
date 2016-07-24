@@ -1,4 +1,4 @@
-package pandora.main;
+package pandora;
     
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/j_spring_security_check")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/kokoelmat")
                 .failureUrl("/login_error")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")

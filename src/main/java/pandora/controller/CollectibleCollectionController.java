@@ -28,7 +28,7 @@ public class CollectibleCollectionController {
     public String list(
             Model model) {
         User currentUser = userService.getCurrentUser();
-        model.addAttribute("collections", collectibleCollectionService.findAll(currentUser));
+        model.addAttribute("collectibleCollections", collectibleCollectionService.findAll(currentUser));
         return "collections";
     }
     
@@ -58,7 +58,22 @@ public class CollectibleCollectionController {
         return "redirect:/kokoelmat";
     }
     
-    @RequestMapping(value = "/{id}/muuta", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public String show(
+            @PathVariable Long id,
+            Model model) {
+        User currentUser = userService.getCurrentUser();
+        CollectibleCollection collectibleCollection = null;
+        try {
+            collectibleCollection = collectibleCollectionService.findOne(id, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        model.addAttribute("collectibleCollection", collectibleCollection);
+        return "collection";
+    }
+    
+    @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.GET)
     public String edit(
             @PathVariable Long id,
             Model model) {
@@ -73,7 +88,7 @@ public class CollectibleCollectionController {
         return "collection_edit";        
     }
     
-    @RequestMapping(value = "/{id}/muuta", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.POST)
     public String update(
             Model model,
             @Valid @ModelAttribute CollectibleCollection collectibleCollection,

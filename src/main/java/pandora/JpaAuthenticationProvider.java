@@ -1,5 +1,5 @@
 
-package pandora.main;
+package pandora;
 
 import java.util.ArrayList;
 import java.util.List;

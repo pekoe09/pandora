@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - kokoelman muokkaus</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Muokkaa kokoelman tietoja</h1>
+            <form id="collectionForm" role="form" action="#" th:action="@{/kokoelmat/{id}/muuta(id=${collectibleCollection.id})}" th:object="${collectibleCollection}" method="post">
+                <input type="hidden" id="id" name="id" th:value="${collectibleCollection.id}" th:value="${collectibleCollection.name}" />
+                <div class="form-group">
+                    <label for="name">Nimi</label>
+                    <input type="text" id="name" name="name" class="form-control" />
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">virheviesti</p>
+                </div>
+
+                <input type="submit" value="Tallenna" class="btn btn-warning" />
+                <a th:href="@{/kokoelmat}" class="btn btn-default">Peruuta</a>
+            </form>
+        </div>
+    </body>
+
+</html>

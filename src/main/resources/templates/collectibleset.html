@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Pandora - setti</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="collectibleSet (collectibleSet)">
+            <h1 th:text="${collectibleSet.name}">Setin nimi</h1>
+            <a href="#" th:href="@{/slotit/lisaa(collectibleSetId=${collectibleSet.id})}" class="btn btn-default">Lisää slotti</a>
+        </div>
+    </body>
+
+</html>

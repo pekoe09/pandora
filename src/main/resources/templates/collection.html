@@ -9,6 +9,9 @@
         <div th:fragment="content">
             <h1 th:text="${collectibleCollection.name}">Kokoelman nimi</h1>
             <a href="#" th:href="@{/setit/lisaa(collectibleCollectionId=${collectibleCollection.id})}" class="btn btn-default">Lisää setti</a>
+            <section th:each="collectibleSet : ${collectibleCollection.collectibleSets}">
+                <div th:replace="collectibleset :: collectibleSet (collectibleSet=${collectibleSet})"></div>
+            </section>
         </div>
     </body>
 

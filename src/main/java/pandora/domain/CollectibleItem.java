@@ -23,6 +23,9 @@ public class CollectibleItem extends BaseModel{
     private CollectibleSlot collectibleSlot;
     @OneToMany(mappedBy = "collectibleItem")
     private List<StoredImage> storedImages;
+    private Long mainImageId;
+    @ManyToOne
+    private User user;
     
     public CollectibleItem() {
         this.storedImages = new ArrayList<>();
@@ -66,6 +69,22 @@ public class CollectibleItem extends BaseModel{
 
     public void setStoredImages(List<StoredImage> storedImages) {
         this.storedImages = storedImages;
+    }
+
+    public Long getMainImageId() {
+        return mainImageId;
+    }
+
+    public void setMainImageId(Long mainImageId) {
+        this.mainImageId = mainImageId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
     
 }

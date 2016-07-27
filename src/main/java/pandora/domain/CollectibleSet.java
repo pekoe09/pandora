@@ -32,6 +32,8 @@ public class CollectibleSet extends BaseModel {
     private List<CollectibleSet> childSets;
     @ManyToOne
     private CollectibleSet parentSet;
+    @ManyToOne
+    private User user;
     
     public CollectibleSet(){
         this.childSets = new ArrayList<>();
@@ -93,6 +95,13 @@ public class CollectibleSet extends BaseModel {
     public void setParentSet(CollectibleSet parentSet) {
         this.parentSet = parentSet;
     }
-    
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }    
     
 }

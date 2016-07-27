@@ -13,11 +13,27 @@ public class CollectibleSetService {
     private CollectibleSetRepository collectibleSetRepository;
 
     public CollectibleSet save(CollectibleSet collectibleSet, User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(currentUser == null) {
+            throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
+        }
+        collectibleSet.setUser(currentUser);
+        collectibleSet = collectibleSetRepository.save(collectibleSet);
+        return collectibleSet;
     }
 
-    public CollectibleSet findOne(Long parentSetId, User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CollectibleSet findOne(Long id, User currentUser) {
+        if(currentUser == null) {
+            throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
+        }
+        CollectibleSet collectibleSet = collectibleSetRepository.findOne(id);
+        if(collectibleSet == null) {
+            return null;
+        }
+        if(currentUser.isIsAdmin() || collectibleSet.getUser().getId().equals(currentUser.getId())) {
+            return collectibleSetRepository.findOne(id);
+        } else {
+            throw new IllegalArgumentException("Käyttäjllä ei ole oikeuksia tähän objektiin!");
+        }        
     }
     
 }

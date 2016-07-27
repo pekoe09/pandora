@@ -26,9 +26,18 @@ public class User extends BaseModel {
     private boolean isAdmin;
     @OneToMany(mappedBy = "user")
     private List<CollectibleCollection> collectibleCollections;
+    @OneToMany(mappedBy = "user")
+    private List<CollectibleSet> collectibleSets;
+    @OneToMany(mappedBy = "user")
+    private List<CollectibleSlot> collectibleSlots;
+    @OneToMany(mappedBy = "user")
+    private List<CollectibleItem> collectibleItems;
+    @OneToMany(mappedBy = "user")
+    private List<StoredImage> storedImages;
     
     public User(){
         this.collectibleCollections = new ArrayList<>();
+        this.collectibleSets = new ArrayList<>();
     }
 
     public String getLastName() {
@@ -86,6 +95,38 @@ public class User extends BaseModel {
 
     public void setCollectibleCollections(List<CollectibleCollection> collectibleCollections) {
         this.collectibleCollections = collectibleCollections;
+    }
+
+    public List<CollectibleSet> getCollectibleSets() {
+        return collectibleSets;
+    }
+
+    public void setCollectibleSets(List<CollectibleSet> collectibleSets) {
+        this.collectibleSets = collectibleSets;
+    }
+
+    public List<CollectibleSlot> getCollectibleSlots() {
+        return collectibleSlots;
+    }
+
+    public void setCollectibleSlots(List<CollectibleSlot> collectibleSlots) {
+        this.collectibleSlots = collectibleSlots;
+    }
+
+    public List<CollectibleItem> getCollectibleItems() {
+        return collectibleItems;
+    }
+
+    public void setCollectibleItems(List<CollectibleItem> collectibleItems) {
+        this.collectibleItems = collectibleItems;
+    }
+
+    public List<StoredImage> getStoredImages() {
+        return storedImages;
+    }
+
+    public void setStoredImages(List<StoredImage> storedImages) {
+        this.storedImages = storedImages;
     }
     
 }

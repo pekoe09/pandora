@@ -26,10 +26,13 @@ public class CollectibleSlot extends BaseModel {
     private Integer ordinality;
     @OneToMany(mappedBy = "collectibleSlot")
     private List<StoredImage> storedImages;
+    private Long mainImageId;
     @OneToMany(mappedBy = "collectibleSlot")
     private List<CollectibleItem> collectibleItems;
     @ManyToOne
     private CollectibleSet collectibleSet;
+    @ManyToOne
+    private User user;
     
     public CollectibleSlot() {
         this.storedImages = new ArrayList<>();
@@ -68,6 +71,14 @@ public class CollectibleSlot extends BaseModel {
         this.storedImages = storedImages;
     }
 
+    public Long getMainImageId() {
+        return mainImageId;
+    }
+
+    public void setMainImageId(Long mainImageId) {
+        this.mainImageId = mainImageId;
+    }
+
     public List<CollectibleItem> getCollectibleItems() {
         return collectibleItems;
     }
@@ -82,6 +93,14 @@ public class CollectibleSlot extends BaseModel {
 
     public void setCollectibleSet(CollectibleSet collectibleSet) {
         this.collectibleSet = collectibleSet;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
     
 }

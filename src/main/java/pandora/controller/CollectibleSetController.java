@@ -66,7 +66,7 @@ public class CollectibleSetController {
         } catch (IllegalArgumentException exc) {
             return "collection_add";
         }
-        return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId() +
-                (collectibleSet.getParentSet() != null ? ("/" + collectibleSet.getParentSet().getId()) : null);
+        String parentSetParam = collectibleSet.getParentSet() != null ? ("/" + collectibleSet.getParentSet().getId()) : "";
+        return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId() + parentSetParam;
     }
 }

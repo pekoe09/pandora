@@ -16,6 +16,8 @@ public class StoredImage extends BaseModel {
     private CollectibleSlot collectibleSlot;
     @ManyToOne
     private CollectibleItem collectibleItem;
+    @ManyToOne
+    private User user;
 
     public String getName() {
         return name;
@@ -55,6 +57,14 @@ public class StoredImage extends BaseModel {
 
     public void setCollectibleItem(CollectibleItem collectibleItem) {
         this.collectibleItem = collectibleItem;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
     
 }

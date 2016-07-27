@@ -8,7 +8,34 @@
     <body>
         <div th:fragment="collectibleSet (collectibleSet)">
             <h1 th:text="${collectibleSet.name}">Setin nimi</h1>
+			
             <a href="#" th:href="@{/slotit/lisaa(collectibleSetId=${collectibleSet.id})}" class="btn btn-default">Lisää slotti</a>
+			
+            <div th:each="childSet : ${collectibleSet.childSets}">
+                <div th:replace="collectibleset :: collectibleSet (collectibleSet=${childSet})"></div>
+            </div>
+
+            <article class="slot-article" th:each="collectibleSlot : ${collectibleSet.collectibleSlots}">
+                <span class="slot-header" th:text="${collectibleSlot.name}"></span>
+                <div class="btn-group slot-buttons">
+                    <a href="#" th:href="@{/slotit/{id}(id=${collectibleSlot.id})}" class="btn btn-primary">Näytä</a>
+                    <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kohde</a>
+                    <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-primary">Muokkaa</a>
+                    <a href="#" th:href="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" class="btn btn-primary">Poista</a>
+                </div>
+                <div class="slot-list-image">
+                    <img th:if="${#lists.isEmpty(collectibleSlot.collectibleItems)}" th:src="@{/kuvat/{id}(id=${collectibleSlot.mainImageId})}"/>
+                    <div th:if="${not #lists.isEmpty(collectibleSlot.collectibleItems)}">
+                        <img th:src="@{/kuvat/{id}(id=collectibleSlot.collectibleItems[0].mainImageId)}"/>
+                    </div>		
+                </div>
+                <div class="slot-list-content">
+                    <p th:text="${collectibleSlot.description}"></p>
+                    <a th:each="collectibleItem : ${collectibleSlot.collectibleItems}" href="#" th:href="@{/kohteet/{id}(id=${collectibleItem.id})}"> 
+                        <span th:text="${collectibleItem.acquisitionDate} + ' ' + ${collectibleItem.acquisitionPrice}"></span>
+                    </a>
+                </div>
+            </article>
         </div>
     </body>
 

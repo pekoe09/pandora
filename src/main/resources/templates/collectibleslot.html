@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - slotti</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1 th:text="${collectibleSlot.name}">Slotin nimi</h1>
+            <h2 th:text="${collectibleSlot.collectibleSet.name}">Setin nimi</h2>
+            <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-default">Muokkaa</a>
+            <a href="#" th:href="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" class="btn btn-danger">Poista</a>
+            <p th:text="${collectibleSlot.description}"></p>
+            
+            <h2>Referenssikuvat</h2>
+            <div th:each="storedImage : ${collectibleSlot.storedImages}">
+                <img src="#" th:src="@{/kuvat/{id}(id=storedImage.id)}" />
+            </div>
+            
+            <h2>Kokoelman kohteet</h2>
+            <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default">Lisää kohde</a>
+            <section th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
+                <article>
+                    <p>Kohteen hankintapvm ja -hinta</p>
+                    <p>Kommentti</p>
+                </article>
+            </section>
+        </div>
+    </body>
+
+</html>

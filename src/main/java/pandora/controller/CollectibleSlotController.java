@@ -78,4 +78,54 @@ public class CollectibleSlotController {
         }
         return "redirect:/kokoelmat/" + collectibleSlot.getCollectibleSet().getCollectibleCollection().getId();
     }
+    
+    @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.GET)
+    public String edit(
+            @PathVariable Long id,
+            Model model) {
+        User currentUser = userService.getCurrentUser();
+        CollectibleSlot collectibleSlot = null;
+        try {
+            collectibleSlot = collectibleSlotService.findOne(id, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        model.addAttribute("collectibleSlot", collectibleSlot);
+        return "collectibleslot_edit";
+    }
+    
+    @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.POST)
+    public String update(
+            Model model,
+            @Valid @ModelAttribute CollectibleSlot collectibleSlot,
+            BindingResult bindingResult,
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            return "collectibleslot_edit";
+        }
+        try {
+            User currentUser = userService.getCurrentUser();
+            collectibleSlot = collectibleSlotService.save(collectibleSlot, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        redirectAttributes.addFlashAttribute("success", "Muutokset tallennettu!");
+        return "redirect:/kokoelmat/" + collectibleSlot.getCollectibleSet().getCollectibleCollection().getId();
+    }
+    
+    @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
+    public String delete(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        CollectibleSlot collectibleSlot = null;
+        try {
+            User currentUser = userService.getCurrentUser();
+            collectibleSlot = collectibleSlotService.delete(id, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        redirectAttributes.addFlashAttribute("success", "Slotti poistettu");
+        return "redirect:/kokoelmat/" + collectibleSlot.getCollectibleSet().getCollectibleCollection().getId();            
+    }
 }

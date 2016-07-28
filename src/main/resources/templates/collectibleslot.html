@@ -10,7 +10,9 @@
             <h1 th:text="${collectibleSlot.name}">Slotin nimi</h1>
             <h2 th:text="${collectibleSlot.collectibleSet.name}">Setin nimi</h2>
             <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-default">Muokkaa</a>
-            <a href="#" th:href="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" class="btn btn-danger">Poista</a>
+            <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
+                    <input type="submit" value="Poista" class="btn btn-danger" />
+            </form>
             <p th:text="${collectibleSlot.description}"></p>
             
             <h2>Referenssikuvat</h2>

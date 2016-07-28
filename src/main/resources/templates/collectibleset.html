@@ -21,7 +21,9 @@
                     <a href="#" th:href="@{/slotit/{id}(id=${collectibleSlot.id})}" class="btn btn-primary">Näytä</a>
                     <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kohde</a>
                     <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-primary">Muokkaa</a>
-                    <a href="#" th:href="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" class="btn btn-primary">Poista</a>
+                    <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
+                        <input type="submit" value="Poista" class="btn btn-danger" />
+                    </form>
                 </div>
                 <div class="slot-list-image">
                     <img th:if="${#lists.isEmpty(collectibleSlot.collectibleItems)}" th:src="@{/kuvat/{id}(id=${collectibleSlot.mainImageId})}"/>

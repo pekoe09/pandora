@@ -35,5 +35,11 @@ public class CollectibleSlotService {
         collectibleSlot = collectibleSlotRepository.save(collectibleSlot);
         return collectibleSlot;
     }
+
+    public CollectibleSlot delete(Long id, User currentUser) {
+        CollectibleSlot collectibleSlot = collectibleSlotRepository.findOne(id);
+        collectibleSlotRepository.delete(id);
+        return collectibleSlot;
+    }
     
 }

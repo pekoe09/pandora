@@ -23,7 +23,7 @@ public class CollectibleSlotService {
         if(currentUser.isIsAdmin() || collectibleSlot.getUser().getId().equals(currentUser.getId())) {
             return collectibleSlot;
         } else {
-            throw new IllegalArgumentException("Käyttäjllä ei ole oikeuksia tähän objektiin!");
+            throw new IllegalArgumentException("Käyttäjällä ei ole oikeuksia tähän objektiin!");
         }
     }
 
@@ -37,8 +37,13 @@ public class CollectibleSlotService {
     }
 
     public CollectibleSlot delete(Long id, User currentUser) {
-        CollectibleSlot collectibleSlot = collectibleSlotRepository.findOne(id);
-        collectibleSlotRepository.delete(id);
+        if(currentUser == null) {
+            throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
+        }
+        CollectibleSlot collectibleSlot = findOne(id, currentUser);
+        if(collectibleSlot != null) {
+            collectibleSlotRepository.delete(id);
+        }
         return collectibleSlot;
     }
     

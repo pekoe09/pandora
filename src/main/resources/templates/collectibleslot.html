@@ -9,6 +9,7 @@
         <div th:fragment="content">
             <h1 th:text="${collectibleSlot.name}">Slotin nimi</h1>
             <h2 th:text="${collectibleSlot.collectibleSet.name}">Setin nimi</h2>
+            <a href="#" th:href="@{/kokoelmat/{id}(id=${collectibleSlot.collectibleSet.collectibleCollection.id})}" class="btn btn-default">Kokoelmaan</a>
             <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-default">Muokkaa</a>
             <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
                     <input type="submit" value="Poista" class="btn btn-danger" />
@@ -24,8 +25,11 @@
             <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default">Lisää kohde</a>
             <section th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                 <article>
-                    <p>Kohteen hankintapvm ja -hinta</p>
-                    <p>Kommentti</p>
+                    <p th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}">Kohteen hankintapvm ja -hinta</p>
+                    <p th:text="${collectibleItem.comment}">Kommentti</p>
+                    <div th:each="${collectibleItem.storedImages}">
+                        <img src="#" th:src="@{/kuvat/{id}(id=storedImage.id)}" />
+                    </div>
                 </article>
             </section>
         </div>

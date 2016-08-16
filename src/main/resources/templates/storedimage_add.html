@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - lisää kuva</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Lisää kuva</h1>
+            <h2 th:text="(${collectibleSlot} != null) ? ${collectibleSlot.name} : ${collectibleItem.collectibleSlot.name}"></h2>
+            <p th:if="${collectibleItem != null}" th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}"></p>
+            
+            <form id="slotForm" role="form" action="#" th:action="@{/kuvat/lisaa}" th:object="${storedImage}" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="collectibleSlot" name="collectibleSlot" th:value="${collectibleSlot} != null ? ${collectibleSlot.id} : null" />
+                <input type="hidden" id="collectibleItem" name="collectibleItem" th:value="${collectibleItem} != null ? ${collectibleItem.id} : null" />
+                <div class="form-group">
+                    <label for="image">Tiedostopolku</label>
+                    <input type="file" name="image" id="image"/>
+                </div>
+                <div class="form-group">
+                    <label for="caption">Kuvateksti</label>
+                    <input type="text" id="caption" name="caption" class="form-control" th:value="${storedImage.caption}" />
+                    <p th:if="${#fields.hasErrors('caption')}" th:errors="*{caption}">Virheviesti</p>
+                </div>
+                
+                <input type="submit" value="Lisää kuva" class="btn btn-primary" />
+            </form>
+        </div>
+    </body>
+
+</html>

@@ -93,6 +93,42 @@ table tr th {
     float: right;
 }
 
+.slot-article {
+    border-color: #3c763d;
+    border-style: solid;
+    border-width: 2px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 5px;
+}
+
+.slot-buttons {
+    float: right;
+}
+
+.slot-buttons form {
+    display: inline;
+}
+
+.set-buttons form {
+    display: inline;
+}
+
+.item-listing {
+    border: #3c763d solid 2px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+.item-buttons form {
+    display: inline;
+}
+
 // ---------- bootstrap-typeahead style fixes ----------------
 
 .typeahead,

@@ -17,7 +17,7 @@
 
             <article class="slot-article" th:each="collectibleSlot : ${collectibleSet.collectibleSlots}">
                 <span class="slot-header" th:text="${collectibleSlot.name}"></span>
-                <div class="btn-group slot-buttons">
+                <div class="slot-buttons">
                     <a href="#" th:href="@{/slotit/{id}(id=${collectibleSlot.id})}" class="btn btn-primary">Näytä</a>
                     <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kohde</a>
                     <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-primary">Muokkaa</a>
@@ -33,9 +33,11 @@
                 </div>
                 <div class="slot-list-content">
                     <p th:text="${collectibleSlot.description}"></p>
-                    <a th:each="collectibleItem : ${collectibleSlot.collectibleItems}" href="#" th:href="@{/kohteet/{id}(id=${collectibleItem.id})}"> 
-                        <span th:text="${collectibleItem.acquisitionDate} + ' ' + ${collectibleItem.acquisitionPrice}"></span>
-                    </a>
+                    <p th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
+                        <a href="#" th:href="@{/kohteet/{id}(id=${collectibleItem.id})}"> 
+                            <span th:text="${collectibleItem.acquisitionDate} + ' ' + ${collectibleItem.acquisitionPrice}"></span>
+                        </a>
+                    </p>    
                 </div>
             </article>
         </div>

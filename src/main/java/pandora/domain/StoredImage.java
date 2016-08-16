@@ -1,16 +1,18 @@
 package pandora.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class StoredImage extends BaseModel {
     
-    @NotEmpty
     private String name;
-    @NotEmpty
-    private String storageKey;
+//    private String storageKey;
+    @Column(length = 100)
+    @Length(max = 100, message = "Kuvateksti voi olla enintään 100 merkkiä pitkä")
     private String caption;
     @ManyToOne
     private CollectibleSlot collectibleSlot;
@@ -26,14 +28,14 @@ public class StoredImage extends BaseModel {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getStorageKey() {
-        return storageKey;
-    }
-
-    public void setStorageKey(String storageKey) {
-        this.storageKey = storageKey;
-    }
+//
+//    public String getStorageKey() {
+//        return storageKey;
+//    }
+//
+//    public void setStorageKey(String storageKey) {
+//        this.storageKey = storageKey;
+//    }
 
     public String getCaption() {
         return caption;

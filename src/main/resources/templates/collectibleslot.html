@@ -9,14 +9,17 @@
         <div th:fragment="content">
             <h1 th:text="${collectibleSlot.name}">Slotin nimi</h1>
             <h2 th:text="${collectibleSlot.collectibleSet.name}">Setin nimi</h2>
-            <a href="#" th:href="@{/kokoelmat/{id}(id=${collectibleSlot.collectibleSet.collectibleCollection.id})}" class="btn btn-default">Kokoelmaan</a>
-            <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-default">Muokkaa</a>
-            <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
-                    <input type="submit" value="Poista" class="btn btn-danger" />
-            </form>
+            <div class="set-buttons">
+                <a href="#" th:href="@{/kokoelmat/{id}(id=${collectibleSlot.collectibleSet.collectibleCollection.id})}" class="btn btn-default">Kokoelmaan</a>
+                <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-default">Muokkaa</a>
+                <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
+                        <input type="submit" value="Poista" class="btn btn-danger" />
+                </form>
+            </div>
             <p th:text="${collectibleSlot.description}"></p>
             
             <h2>Referenssikuvat</h2>
+            <a href="#" th:href="@{/kuvat/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kuva</a>
             <div th:each="storedImage : ${collectibleSlot.storedImages}">
                 <img src="#" th:src="@{/kuvat/{id}(id=storedImage.id)}" />
             </div>
@@ -24,11 +27,18 @@
             <h2>Kokoelman kohteet</h2>
             <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default">Lisää kohde</a>
             <section th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
-                <article>
+                <article class="item-listing">
                     <p th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}">Kohteen hankintapvm ja -hinta</p>
                     <p th:text="${collectibleItem.comment}">Kommentti</p>
-                    <div th:each="${collectibleItem.storedImages}">
+                    <div th:each="storedImage : ${collectibleItem.storedImages}">
                         <img src="#" th:src="@{/kuvat/{id}(id=storedImage.id)}" />
+                    </div>
+                    <div class="item-buttons">
+                        <a href="#" th:href="@{/kuvat/lisaa(collectibleItemId=${collectibleItem.id})}" class="btn btn-primary">Lisää kuva</a>
+                        <a href="#" th:href="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}" class="btn btn-primary">Muokkaa</a>
+                        <form class="form-inline" action="#" th:action="@{/kohteet/{id}/poista(id=${collectibleItem.id})}" method="post">
+                            <input type="submit" value="Poista" class="btn btn-danger" />
+                        </form>
                     </div>
                 </article>
             </section>

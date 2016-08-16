@@ -12,6 +12,8 @@
             <properties>
                 <exec.args>-classpath %classpath pandora.Main</exec.args>
                 <exec.executable>java</exec.executable>
+                <Env.AWS_S3_ACCESS_KEY>AKIAIX3CYYHK7SEYAQ7Q</Env.AWS_S3_ACCESS_KEY>
+                <Env.AWS_S3_SECRET_KEY>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</Env.AWS_S3_SECRET_KEY>
             </properties>
         </action>
         <action>
@@ -27,6 +29,8 @@
                 <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath pandora.Main</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
+                <Env.AWS_S3_ACCESS_KEY>AKIAIX3CYYHK7SEYAQ7Q</Env.AWS_S3_ACCESS_KEY>
+                <Env.AWS_S3_SECRET_KEY>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</Env.AWS_S3_SECRET_KEY>
             </properties>
         </action>
         <action>

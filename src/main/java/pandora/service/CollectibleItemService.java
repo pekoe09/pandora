@@ -1,16 +1,21 @@
 package pandora.service;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pandora.domain.CollectibleItem;
+import pandora.domain.StoredImage;
 import pandora.domain.User;
 import pandora.repository.CollectibleItemRepository;
 
 @Service
+@Transactional
 public class CollectibleItemService {
     
     @Autowired
     private CollectibleItemRepository collectibleItemRepository;
+    @Autowired
+    private CollectibleSlotService collectibleSlotService;
 
     public CollectibleItem save(CollectibleItem collectibleItem, User currentUser) {
         if(currentUser == null) {
@@ -18,7 +23,20 @@ public class CollectibleItemService {
         }
         collectibleItem.setUser(currentUser);
         collectibleItem = collectibleItemRepository.save(collectibleItem);
+        collectibleSlotService.addCollectibleItem(collectibleItem.getCollectibleSlot().getId(), collectibleItem);
         return collectibleItem;
+    }
+    
+    public CollectibleItem addStoredImage(Long id, StoredImage image) {
+        CollectibleItem collectibleItem = collectibleItemRepository.findOne(id);
+        if(collectibleItem == null) {
+            throw new IllegalArgumentException("Kohdetta ei löydy!");
+        }
+        if(!image.getUser().getId().equals(collectibleItem.getUser().getId())) {
+            throw new IllegalArgumentException("Käyttäjän oikeudet eivät riitä operaatioon!");
+        }
+        collectibleItem.getStoredImages().add(image);
+        return collectibleItemRepository.save(collectibleItem);
     }
 
     public CollectibleItem findOne(Long id, User currentUser) {

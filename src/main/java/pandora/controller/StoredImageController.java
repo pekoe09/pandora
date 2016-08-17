@@ -1,10 +1,22 @@
 package pandora.controller;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.validation.Valid;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +50,8 @@ public class StoredImageController {
     private CollectibleItemService collectibleItemService;
     @Autowired
     private UserService userService;
-    private String UPLOAD_DIR = "upload-dir";
+    @Autowired
+    private ServletContext servletContext;
     
     @RequestMapping(value = "/lisaa", method = RequestMethod.GET)
     public String create(
@@ -88,16 +101,24 @@ public class StoredImageController {
         return "redirect:/slotit/" + slotId;
     }
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
-    public ResponseEntity<?> show(@PathVariable Long id) {
+    public ResponseEntity<byte[]> show(@PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        byte[] imageBytes = null;
         try {
             StoredImage storedImage = storedImageService.findOne(id, userService.getCurrentUser());
-            return ResponseEntity.ok(storedImageService.getImage(storedImage.getId()));
+            Image image = storedImageService.getImage(storedImage.getId(), true);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write((BufferedImage)image, "jpg", os);
+            InputStream in = new ByteArrayInputStream(os.toByteArray());
+            imageBytes = IOUtils.toByteArray(in);
+            headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+            return ResponseEntity.ok(imageBytes);
         } catch (IOException exc) {
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(null, headers, HttpStatus.I_AM_A_TEAPOT);
         } catch (Exception exc) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(null, headers, HttpStatus.NOT_FOUND);
         }
     }
 //    

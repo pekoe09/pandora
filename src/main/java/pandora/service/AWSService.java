@@ -105,11 +105,6 @@ public class AWSService {
     }
     
     private AmazonS3 getClient() throws IOException{
-//        return new AmazonS3Client(new PropertiesCredentials(
-//                AWSService.class.getResourceAsStream("awsCredentials.properties")));
-        AWSCredentials creds = new BasicAWSCredentials("",
-                "");
-        
-        return new AmazonS3Client(creds);
+        return new AmazonS3Client();
     }
 }

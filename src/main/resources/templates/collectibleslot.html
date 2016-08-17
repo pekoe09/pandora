@@ -21,7 +21,7 @@
             <h2>Referenssikuvat</h2>
             <a href="#" th:href="@{/kuvat/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kuva</a>
             <div th:each="storedImage : ${collectibleSlot.storedImages}">
-                <img src="#" th:src="@{/kuvat/{id}(id=storedImage.id)}" />
+                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" />
             </div>
             
             <h2>Kokoelman kohteet</h2>
@@ -30,8 +30,18 @@
                 <article class="item-listing">
                     <p th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}">Kohteen hankintapvm ja -hinta</p>
                     <p th:text="${collectibleItem.comment}">Kommentti</p>
-                    <div th:each="storedImage : ${collectibleItem.storedImages}">
-                        <img src="#" th:src="@{/kuvat/{id}(id=storedImage.id)}" />
+                    <div class="image-row">
+                        <div th:each="storedImage : ${collectibleItem.storedImages}" class="item-image">
+                            <div class="thumbnail">
+                                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" />
+                            </div>
+                            <div class="caption">
+                                <p th:text="${storedImage.caption}"></p>
+                            </div>
+                            <form class="form-inline" action="#" th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
+                                <input type="submit" value="Poista" class="btn btn-danger" />
+                            </form>
+                        </div>
                     </div>
                     <div class="item-buttons">
                         <a href="#" th:href="@{/kuvat/lisaa(collectibleItemId=${collectibleItem.id})}" class="btn btn-primary">Lisää kuva</a>

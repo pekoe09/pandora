@@ -129,6 +129,19 @@ table tr th {
     display: inline;
 }
 
+.thumbnail {
+    margin-bottom: 5px;
+}
+
+
+.item-image {
+    margin: 10px 0;
+}
+
+.image-row {
+    display: flex;
+}
+
 // ---------- bootstrap-typeahead style fixes ----------------
 
 .typeahead,

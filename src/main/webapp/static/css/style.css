@@ -93,7 +93,7 @@ table tr th {
     float: right;
 }
 
-.slot-article {
+.slot-list-article {
     border-color: #3c763d;
     border-style: solid;
     border-width: 2px;
@@ -104,15 +104,50 @@ table tr th {
     padding: 5px;
 }
 
-.slot-buttons {
+.slot-list-image {
+    float: left;
+}
+
+.slot-list-button {
     float: right;
 }
 
-.slot-buttons form {
+.slot-list-button form {
     display: inline;
 }
 
-.set-buttons form {
+.slot-list-title {
+    font-size: 1.1em;
+}
+
+.slot-item-title {
+    
+}
+
+.slot-item-link {
+    text-decoration: none;
+    font-weight: 700;
+    color: #3c763d;
+}
+
+.parentset-header {
+    background-color: #67b168;
+    color: #fff;    
+}
+
+.subset-header {
+    background-color: #c1e2b3;
+}
+
+.set-title {
+    font-size: 1.2em;
+}
+
+.set-button {
+    float: right;
+}
+
+.set-button form {
     display: inline;
 }
 

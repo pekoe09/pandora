@@ -7,33 +7,66 @@
     </head>
     <body>
         <div th:fragment="content">
-            <h1 th:text="${collectibleSlot.name}">Slotin nimi</h1>
-            <h2 th:text="${collectibleSlot.collectibleSet.name}">Setin nimi</h2>
-            <div class="set-buttons">
-                <a href="#" th:href="@{/kokoelmat/{id}(id=${collectibleSlot.collectibleSet.collectibleCollection.id})}" class="btn btn-default">Kokoelmaan</a>
-                <a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}" class="btn btn-default">Muokkaa</a>
-                <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
-                        <input type="submit" value="Poista" class="btn btn-danger" />
-                </form>
+            <h1><span th:text="${collectibleSlot.name}"></span> <small th:text="${collectibleSlot.collectibleSet.name}"></small></h1>
+            <div class="dropdown set-button">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Toiminnot
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}">Muokkaa</a></li>
+                    <li>
+                        <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
+                            <input type="submit" value="Poista" class="li-submit" />
+                        </form>
+                    </li>
+                </ul>
             </div>
+            <a href="#" th:href="@{/kokoelmat/{id}(id=${collectibleSlot.collectibleSet.collectibleCollection.id})}">Kokoelmaan</a>
             <p th:text="${collectibleSlot.description}"></p>
             
-            <h2>Referenssikuvat</h2>
+            <h3>Referenssikuvat</h3>
             <a href="#" th:href="@{/kuvat/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kuva</a>
-            <div th:each="storedImage : ${collectibleSlot.storedImages}">
-                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" />
+            <div class="image-row">
+                <div th:each="storedImage : ${collectibleSlot.storedImages}">
+                    <div class="thumbnail">
+                        <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" />
+                    </div>
+                    <div class="caption">
+                        <p th:text="${storedImage.caption}"></p>
+                    </div>
+                    <form class="form-inline" action="#" th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
+                        <input type="submit" value="Poista" class="btn btn-danger" />
+                    </form>
+                </div>
             </div>
             
-            <h2>Kokoelman kohteet</h2>
-            <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default">Lisää kohde</a>
+            <h3>Kokoelman kohteet</h3>
+            <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">Lisää kohde</a>
             <section th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                 <article class="item-listing">
                     <p th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}">Kohteen hankintapvm ja -hinta</p>
                     <p th:text="${collectibleItem.comment}">Kommentti</p>
+                    <div class="dropdown item-button">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Toiminnot
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" th:href="@{/kuvat/lisaa(collectibleItemId=${collectibleItem.id})}">Lisää kuva</a></li>
+                            <li><a href="#" th:href="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}">Muokkaa</a></li>
+                            <li>
+                                <form class="form-inline" action="#" th:action="@{/kohteet/{id}/poista(id=${collectibleItem.id})}" method="post">
+                                    <input type="submit" value="Poista" class="li-submit" />
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    
                     <div class="image-row">
                         <div th:each="storedImage : ${collectibleItem.storedImages}" class="item-image">
                             <div class="thumbnail">
-                                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" />
+                                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" height="200"/>
                             </div>
                             <div class="caption">
                                 <p th:text="${storedImage.caption}"></p>
@@ -42,13 +75,6 @@
                                 <input type="submit" value="Poista" class="btn btn-danger" />
                             </form>
                         </div>
-                    </div>
-                    <div class="item-buttons">
-                        <a href="#" th:href="@{/kuvat/lisaa(collectibleItemId=${collectibleItem.id})}" class="btn btn-primary">Lisää kuva</a>
-                        <a href="#" th:href="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}" class="btn btn-primary">Muokkaa</a>
-                        <form class="form-inline" action="#" th:action="@{/kohteet/{id}/poista(id=${collectibleItem.id})}" method="post">
-                            <input type="submit" value="Poista" class="btn btn-danger" />
-                        </form>
                     </div>
                 </article>
             </section>

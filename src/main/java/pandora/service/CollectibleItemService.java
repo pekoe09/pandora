@@ -36,6 +36,9 @@ public class CollectibleItemService {
             throw new IllegalArgumentException("Käyttäjän oikeudet eivät riitä operaatioon!");
         }
         collectibleItem.getStoredImages().add(image);
+        if(collectibleItem.getMainImageId() == 0) {
+            collectibleItem.setMainImageId(image.getId());
+        }
         return collectibleItemRepository.save(collectibleItem);
     }
 

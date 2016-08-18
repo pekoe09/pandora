@@ -65,6 +65,9 @@ public class CollectibleSlotService {
             throw new IllegalArgumentException("Käyttäjän oikeudet eivät riitä operaatioon!");
         }
         collectibleSlot.getStoredImages().add(image);
+        if(collectibleSlot.getMainImageId() == 0) {
+            collectibleSlot.setMainImageId(image.getId());
+        }
         return collectibleSlotRepository.save(collectibleSlot);
     }
 

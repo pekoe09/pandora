@@ -102,6 +102,12 @@ table tr th {
     border-radius: 8px;
     margin: 10px 0;
     padding: 5px;
+    display: flex;
+}
+
+.slot-list-content {
+    width: 100%;
+    padding: 5px;
 }
 
 .slot-list-image {
@@ -117,7 +123,8 @@ table tr th {
 }
 
 .slot-list-title {
-    font-size: 1.1em;
+    font-size: 1.4em;
+    color: #3c763d;
 }
 
 .slot-item-title {
@@ -132,7 +139,12 @@ table tr th {
 
 .parentset-header {
     background-color: #67b168;
-    color: #fff;    
+    color: #fff; 
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    overflow: auto;
+    margin: 5px 0;
 }
 
 .subset-header {
@@ -141,10 +153,19 @@ table tr th {
 
 .set-title {
     font-size: 1.2em;
+    font-weight: 700;
+    font-size: 1.5em;
+    margin: 0 5px;
+    padding: 8px;    
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
 
 .set-button {
     float: right;
+    position: relative;
+    margin: 5px;
 }
 
 .set-button form {
@@ -160,9 +181,9 @@ table tr th {
     margin: 10px 0;
 }
 
-.item-buttons form {
+/*.item-buttons form {
     display: inline;
-}
+}*/
 
 .thumbnail {
     margin-bottom: 5px;
@@ -175,7 +196,28 @@ table tr th {
 
 .image-row {
     display: flex;
+    margin: 5px 0;
 }
+
+.li-submit {
+    background: transparent;
+    border: none;
+    color: #333;
+    font-weight: 400;
+    line-height: 1.42857143;
+    padding: 3px 20px;
+    display: block;
+    white-space: nowrap;
+    clear: both;
+    width: 100%;
+    text-align: left;
+}
+
+.li-submit:hover {
+    background: #c9302c;
+    color: #fff;
+}
+
 
 // ---------- bootstrap-typeahead style fixes ----------------
 

@@ -26,7 +26,7 @@ public class CollectibleSlot extends BaseModel {
     private Integer ordinality;
     @OneToMany(mappedBy = "collectibleSlot")
     private List<StoredImage> storedImages;
-    private Long mainImageId;
+    private long mainImageId;
     @OneToMany(mappedBy = "collectibleSlot")
     private List<CollectibleItem> collectibleItems;
     @ManyToOne
@@ -71,11 +71,11 @@ public class CollectibleSlot extends BaseModel {
         this.storedImages = storedImages;
     }
 
-    public Long getMainImageId() {
+    public long getMainImageId() {
         return mainImageId;
     }
 
-    public void setMainImageId(Long mainImageId) {
+    public void setMainImageId(long mainImageId) {
         this.mainImageId = mainImageId;
     }
 

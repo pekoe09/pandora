@@ -8,7 +8,7 @@
     <body>
         <div th:fragment="collectibleSet (collectibleSet)">
             <div th:class="${collectibleSet.parentSet} == null ? parentset-header : subset-header">
-                <h1 th:text="${collectibleSet.name}" class="set-title">Setin nimi</h1>			
+                <span th:text="${collectibleSet.name}" class="set-title">Setin nimi</span>			
                 <a href="#" th:href="@{/slotit/lisaa(collectibleSetId=${collectibleSet.id})}" class="btn btn-default set-button">Lisää slotti</a>
             </div>
 			
@@ -21,7 +21,7 @@
                     <a href="#" th:href="@{/slotit/{id}(id=${collectibleSlot.id})}">
                         <img th:if="${#lists.isEmpty(collectibleSlot.collectibleItems)}" th:src="@{/kuvat/{id}(id=${collectibleSlot.mainImageId})}"/>
                         <div th:if="${not #lists.isEmpty(collectibleSlot.collectibleItems)}">
-                            <img th:src="@{/kuvat/{id}(id=collectibleSlot.collectibleItems[0].mainImageId)}"/>
+                            <img th:src="@{/kuvat/{id}(id=${collectibleSlot.collectibleItems[0].mainImageId})}"/>
                         </div>
                     </a>
                 </div>
@@ -42,7 +42,7 @@
                                 <li><a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}">Muokkaa</a></li>
                                 <li>
                                     <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
-                                        <input type="submit" value="Poista" />
+                                        <input type="submit" value="Poista" class="li-submit" />
                                     </form>
                                 </li>
                             </ul>
@@ -54,7 +54,8 @@
                         <div th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                             <div class="slot-item-title">Kohteet</div>
                             <a href="#" th:href="@{/kohteet/{id}(id=${collectibleItem.id})}" class="slot-item-link"> 
-                                <span th:text="${collectibleItem.acquisitionDate} + ' ' + ${collectibleItem.acquisitionPrice}"></span>
+                                <span th:text="${#dates.format(collectibleItem.acquisitionDate, 'd.MM.yyyy')} 
+                                      + ' ' + ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2)} + 'eur'"></span>
                             </a>
                         </div>    
                     </div>

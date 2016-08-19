@@ -2,12 +2,9 @@ package pandora.service;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.BasicSessionCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -15,8 +12,6 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -48,6 +43,19 @@ public class AWSService {
         return image;
     }
     
+    public void delete(StoredImage image) throws IOException {
+        if(image != null && image.getId() > 0){
+            AmazonS3 s3Client = getClient();
+            try {
+                s3Client.deleteObject(new DeleteObjectRequest(BUCKET, image.getId().toString()));
+            } catch (AmazonServiceException ase) {
+                throw new IllegalArgumentException("AWS-yhteyden avaaminen ei onnistu!");
+            } catch (AmazonClientException ace) {
+                throw new IllegalArgumentException("AWS-operaatio ei onnistu!");
+            }
+        }        
+    }
+    
     public Image retrieve(String storageKey) throws IOException {
         if(storageKey == null || storageKey.length() == 0){
             return null;
@@ -64,18 +72,6 @@ public class AWSService {
     private String uploadSingleItem(MultipartFile file, String key) throws FileNotFoundException, IOException{
         AmazonS3 s3Client = getClient();
         try{
-//            FileInputStream stream = new FileInputStream(filepath);
-            // mahdollinen vaihtoehto:
-//            S3Object helloWorldObject = new S3Object("HelloWorld2.txt");
-//
-//ByteArrayInputStream greetingIS = new ByteArrayInputStream(greeting.getBytes());
-//
-//helloWorldObject.setDataInputStream(greetingIS);
-//helloWorldObject.setContentLength(
-//    greeting.getBytes(Constants.DEFAULT_ENCODING).length);
-//helloWorldObject.setContentType("text/plain");
-//
-//s3Service.putObject(testBucket, helloWorldObject);
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(file.getSize());
             PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET, key, file.getInputStream(), objectMetadata);

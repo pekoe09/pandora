@@ -67,5 +67,21 @@ public class CollectibleItemService {
         }
         return collectibleItem;
     }
+
+    public void removeStoredImage(StoredImage image) {
+        if(image == null) {
+            throw new IllegalArgumentException("Kuva puuttuu!");
+        }
+        CollectibleItem collectibleItem = image.getCollectibleItem();
+        collectibleItem.getStoredImages().remove(image);
+        if (collectibleItem.getMainImageId() == image.getId()) {
+            if(collectibleItem.getStoredImages().size() > 0) {
+                collectibleItem.setMainImageId(collectibleItem.getStoredImages().get(0).getId());
+            } else {
+                collectibleItem.setMainImageId(0);
+            }           
+        }
+        collectibleItemRepository.save(collectibleItem);
+    }
     
 }

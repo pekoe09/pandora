@@ -121,9 +121,22 @@ public class StoredImageController {
             return new ResponseEntity<>(null, headers, HttpStatus.NOT_FOUND);
         }
     }
-//    
-//    @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
-//    public String delete() {
-//        
-//    }    
+    
+    @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
+    public String delete(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        StoredImage storedImage = null;
+        try {
+            User currentUser = userService.getCurrentUser();
+            storedImage = storedImageService.delete(id, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        Long imageParentSlotId = storedImage.getCollectibleItem() != null
+            ? storedImage.getCollectibleItem().getCollectibleSlot().getId()
+            : storedImage.getCollectibleSlot().getId();
+        redirectAttributes.addFlashAttribute("success", "Kuva poistettu!");
+        return "redirect:/slotti/" + imageParentSlotId;
+    }    
 }

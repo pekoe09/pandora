@@ -67,4 +67,27 @@ public class StoredImageService {
         }
         return image;
     }
+
+    public StoredImage delete(Long id, User currentUser) {
+        StoredImage image = findOne(id, currentUser);
+        if(image == null) {
+            throw new IllegalArgumentException("Kuvaa ei löydy!");
+        } 
+        if(!currentUser.isIsAdmin() && !image.getUser().getId().equals(currentUser.getId())) {
+            throw new IllegalArgumentException("Käyttäjällä ei ole oikeuksia tähän objektiin!");
+        }
+        
+        try {
+            awsService.delete(image);            
+        } catch (IOException exc) {
+            throw new IllegalArgumentException(exc.getMessage());
+        }
+        if(image.getCollectibleItem() != null) {
+            collectibleItemService.removeStoredImage(image);
+        } else if(image.getCollectibleSlot() != null) {
+            collectibleSlotService.removeStoredImage(image);
+        }
+        storedImageRepository.delete(id);
+        return image;
+    }
 }

@@ -2,7 +2,11 @@ package pandora.service;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +40,37 @@ public class StoredImageService {
         storedImage.setName(image.getOriginalFilename());
         storedImage = storedImageRepository.save(storedImage);
         awsService.deposit(storedImage, image);   
+        
+        // adds thumbnail version as well
+        StoredImage thumbnailImage = new StoredImage();
+        thumbnailImage.setCaption(storedImage.getCaption());
+        thumbnailImage.setName(storedImage.getName());
+        thumbnailImage.setUser(currentUser);
+        thumbnailImage.setIsThumbnail(true);
+        thumbnailImage.setMainImage(storedImage);
+        thumbnailImage.setCollectibleItem(storedImage.getCollectibleItem());
+        thumbnailImage.setCollectibleSlot(storedImage.getCollectibleSlot());
+        thumbnailImage = storedImageRepository.save(thumbnailImage);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        int thumbnailHeight = storedImage.getCollectibleItem() != null ? storedImage.getCollectibleItem().getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight()
+                                                                        : storedImage.getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight();
+        if(thumbnailHeight == 0) {
+            thumbnailHeight = 200;
+        }
+        Thumbnails.of((BufferedImage)ImageIO.read(new BufferedInputStream(image.getInputStream())))
+                                                .size(thumbnailHeight, thumbnailHeight)
+                                                .outputFormat("jpg")
+                                                .toOutputStream(os);        
+        awsService.deposit(thumbnailImage, new ByteArrayInputStream(os.toByteArray()), os.size());
+        storedImage.setThumbnailImage(thumbnailImage);
+        storedImage = storedImageRepository.save(storedImage);
+        
         if(storedImage.getCollectibleItem() != null) {
             collectibleItemService.addStoredImage(storedImage.getCollectibleItem().getId(), storedImage);
+            collectibleItemService.addStoredImage(storedImage.getCollectibleItem().getId(), thumbnailImage);
         } else {
             collectibleSlotService.addStoredImage(storedImage.getCollectibleSlot().getId(), storedImage);
+            collectibleSlotService.addStoredImage(storedImage.getCollectibleSlot().getId(), thumbnailImage);
         }
         return storedImage;
     }
@@ -57,14 +88,22 @@ public class StoredImageService {
         return storedImage;
     }    
     
-    public Image getImage(Long id, boolean thumbnailed) throws IOException {
-        Image image = awsService.retrieve(id.toString());
-        if(thumbnailed) {
-            image = Thumbnails.of((BufferedImage)image)
-                    .size(200, 200)
-                    .outputFormat("jpg")
-                    .asBufferedImage();
-        }
+    public Image getImage(Long id) throws IOException {
+        StoredImage storedImage = storedImageRepository.findOne(id);
+        Image image = null;
+//        if(thumbnailed && !storedImage.getIsThumbnail()) {
+//            image = awsService.retrieve(storedImage.getThumbnailImage().getId().toString());
+//        } else if (!thumbnailed && storedImage.getIsThumbnail()) {
+//            image = awsService.retrieve(storedImage.getMainImage().getId().toString());
+//        } else{
+            image = awsService.retrieve(id.toString());
+//        }
+//        if(thumbnailed) {
+//            image = Thumbnails.of((BufferedImage)image)
+//                    .size(200, 200)
+//                    .outputFormat("jpg")
+//                    .asBufferedImage();
+//        }
         return image;
     }
 
@@ -77,17 +116,35 @@ public class StoredImageService {
             throw new IllegalArgumentException("Käyttäjällä ei ole oikeuksia tähän objektiin!");
         }
         
+        StoredImage mainImage, thumbnailImage;
+        if(image.getIsThumbnail())  {
+            mainImage = image.getMainImage();
+            thumbnailImage = image;
+        } else {
+            mainImage = image;
+            thumbnailImage = image.getThumbnailImage();
+        }
+        
         try {
-            awsService.delete(image);            
+            awsService.delete(mainImage);  
+            awsService.delete(thumbnailImage);
         } catch (IOException exc) {
             throw new IllegalArgumentException(exc.getMessage());
         }
         if(image.getCollectibleItem() != null) {
-            collectibleItemService.removeStoredImage(image);
+            collectibleItemService.removeStoredImage(mainImage);
+            collectibleItemService.removeStoredImage(thumbnailImage);
         } else if(image.getCollectibleSlot() != null) {
-            collectibleSlotService.removeStoredImage(image);
+            collectibleSlotService.removeStoredImage(mainImage);
+            collectibleSlotService.removeStoredImage(thumbnailImage);
         }
-        storedImageRepository.delete(id);
+        mainImage.setThumbnailImage(null);
+        thumbnailImage.setMainImage(null);
+        storedImageRepository.save(mainImage);
+        storedImageRepository.save(thumbnailImage);
+        
+        storedImageRepository.delete(mainImage.getId());
+        storedImageRepository.delete(thumbnailImage.getId());
         return image;
     }
 }

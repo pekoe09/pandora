@@ -64,9 +64,11 @@
                     </div>
                     
                     <div class="image-row">
-                        <div th:each="storedImage : ${collectibleItem.storedImages}" class="item-image">
+                        <div th:each="storedImage : ${collectibleItem.storedImages}" th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
                             <div class="thumbnail">
-                                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" height="200"/>
+                                <!--<a href="#" data-target="#large-image-modal" data-toggle="modal">-->
+                                    <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>
+                                <!--</a>-->                                
                             </div>
                             <div class="caption">
                                 <p th:text="${storedImage.caption}"></p>
@@ -78,7 +80,29 @@
                     </div>
                 </article>
             </section>
-        </div>
+                    
+            <div id="large-image-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                        </div>
+                        <div class="modal-body">
+                            <img id="large-image" src="" />
+                            <p id="large-image-caption"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>       
+
+        <th:block th:fragment="pagescript">
+            <script src="/static/js/image-modal.js"></script>
+        </th:block>        
     </body>
 
 </html>

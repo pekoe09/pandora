@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 
 @Entity
 public class CollectibleCollection extends BaseModel {
@@ -16,6 +17,8 @@ public class CollectibleCollection extends BaseModel {
     @Column(length = 100)
     @Length(max = 100, message = "Nimi voi olla enintään 100 merkkiä pitkä")
     private String name;
+    @Range(min=0, max=1000)
+    private int thumbnailHeight;
     @OneToMany(mappedBy = "collectibleCollection")
     private List<CollectibleSet> collectibleSets;
     @ManyToOne
@@ -23,6 +26,7 @@ public class CollectibleCollection extends BaseModel {
     
     public CollectibleCollection() {
         this.collectibleSets = new ArrayList<>();
+        this.thumbnailHeight = 0;
     }
 
     public String getName() {
@@ -31,6 +35,14 @@ public class CollectibleCollection extends BaseModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getThumbnailHeight() {
+        return thumbnailHeight;
+    }
+
+    public void setThumbnailHeight(int thumbnailHeight) {
+        this.thumbnailHeight = thumbnailHeight;
     }
 
     public List<CollectibleSet> getCollectibleSets() {

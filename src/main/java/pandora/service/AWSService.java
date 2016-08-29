@@ -12,8 +12,12 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
 import pandora.domain.StoredImage;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,25 @@ public class AWSService {
         String key = null;
         try {
             key = uploadSingleItem(newFile, image.getId().toString());
+        } catch(FileNotFoundException fnfExc) {
+            throw fnfExc;
+        } catch(IOException ioExc){
+            throw ioExc;
+        }
+        if(key == null || key.length() == 0){
+            image = null;
+        } 
+        
+        return image;
+    }
+    
+    public StoredImage deposit(StoredImage image, ByteArrayInputStream imageStream, long size) throws IOException{
+        if(image == null || imageStream == null) {
+            return null;
+        }
+        String key = null;
+        try {
+            key = uploadSingleItem(imageStream, image.getId().toString(), size);
         } catch(FileNotFoundException fnfExc) {
             throw fnfExc;
         } catch(IOException ioExc){
@@ -70,11 +93,27 @@ public class AWSService {
     }
     
     private String uploadSingleItem(MultipartFile file, String key) throws FileNotFoundException, IOException{
+//        AmazonS3 s3Client = getClient();
+//        try{
+//            ObjectMetadata objectMetadata = new ObjectMetadata();
+//            objectMetadata.setContentLength(file.getSize());            
+//            PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET, key, file.getInputStream(), objectMetadata);
+//            PutObjectResult putResult = s3Client.putObject(putObjectRequest);
+//        } catch (AmazonServiceException ase) {
+//            return null;
+//        } catch (AmazonClientException ace) {
+//            return null;
+//        }
+        key = uploadSingleItem(file.getInputStream(), key, file.getSize());
+        return key;
+    }
+    
+        private String uploadSingleItem(InputStream fileStream, String key, long size) throws FileNotFoundException, IOException{
         AmazonS3 s3Client = getClient();
         try{
             ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentLength(file.getSize());
-            PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET, key, file.getInputStream(), objectMetadata);
+            objectMetadata.setContentLength(size);            
+            PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET, key, fileStream, objectMetadata);
             PutObjectResult putResult = s3Client.putObject(putObjectRequest);
         } catch (AmazonServiceException ase) {
             return null;

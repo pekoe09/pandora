@@ -84,17 +84,21 @@ public class StoredImageController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors() || image.isEmpty()) {
+            model.addAttribute("collectibleSlot", storedImage.getCollectibleSlot());
+            model.addAttribute("collectibleItem", storedImage.getCollectibleItem());
             return "storedimage_add";
         }
         User currentUser = userService.getCurrentUser();
         try {
-//            Files.copy(image.getInputStream(), 
-//                        Paths.get(UPLOAD_DIR, image.getOriginalFilename()));
             storedImage = storedImageService.save(storedImage, image, currentUser);
         } catch (IOException exc) {
             model.addAttribute("error", "Tiedostoa " + image.getOriginalFilename() + " ei pystytty lataamaan!");
+            model.addAttribute("collectibleSlot", storedImage.getCollectibleSlot());
+            model.addAttribute("collectibleItem", storedImage.getCollectibleItem());
             return "storedimage_add";
         } catch (IllegalArgumentException exc) {
+            model.addAttribute("collectibleSlot", storedImage.getCollectibleSlot());
+            model.addAttribute("collectibleItem", storedImage.getCollectibleItem());
             return "storedimage_add";
         }
         Long slotId = storedImage.getCollectibleItem() != null ? storedImage.getCollectibleItem().getCollectibleSlot().getId() : storedImage.getCollectibleSlot().getId();
@@ -103,12 +107,15 @@ public class StoredImageController {
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
-    public ResponseEntity<byte[]> show(@PathVariable Long id) {
+    public ResponseEntity<byte[]> show(
+            @PathVariable Long id
+//            @RequestParam(required = false) Boolean thumbnail
+    ) {
         HttpHeaders headers = new HttpHeaders();
         byte[] imageBytes = null;
         try {
             StoredImage storedImage = storedImageService.findOne(id, userService.getCurrentUser());
-            Image image = storedImageService.getImage(storedImage.getId(), true);
+            Image image = storedImageService.getImage(storedImage.getId());
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write((BufferedImage)image, "jpg", os);
             InputStream in = new ByteArrayInputStream(os.toByteArray());
@@ -137,6 +144,6 @@ public class StoredImageController {
             ? storedImage.getCollectibleItem().getCollectibleSlot().getId()
             : storedImage.getCollectibleSlot().getId();
         redirectAttributes.addFlashAttribute("success", "Kuva poistettu!");
-        return "redirect:/slotti/" + imageParentSlotId;
+        return "redirect:/slotit/" + imageParentSlotId;
     }    
 }

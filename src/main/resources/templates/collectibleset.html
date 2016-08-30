@@ -20,9 +20,7 @@
                 <div class="slot-list-image">
                     <a href="#" th:href="@{/slotit/{id}(id=${collectibleSlot.id})}">
                         <img th:if="${#lists.isEmpty(collectibleSlot.collectibleItems)}" th:src="@{/kuvat/{id}(id=${collectibleSlot.mainImageId})}"/>
-                        <div th:if="${not #lists.isEmpty(collectibleSlot.collectibleItems)}">
-                            <img th:src="@{/kuvat/{id}(id=${collectibleSlot.collectibleItems[0].mainImageId})}"/>
-                        </div>
+                        <img th:if="${not #lists.isEmpty(collectibleSlot.collectibleItems)}" th:src="@{/kuvat/{id}(id=${collectibleSlot.collectibleItems[0].mainImageId})}"/>
                     </a>
                 </div>
                 <div class="slot-list-content">

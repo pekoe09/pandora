@@ -79,6 +79,9 @@ public class StoredImageService {
         if(currentUser == null) {
             throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
         }
+        if(id == 0) {
+            return null;
+        }
         StoredImage storedImage = storedImageRepository.findOne(id);
         if(storedImage != null) {
             if(!currentUser.isIsAdmin() && !storedImage.getUser().getId().equals(currentUser.getId())) {
@@ -89,21 +92,8 @@ public class StoredImageService {
     }    
     
     public Image getImage(Long id) throws IOException {
-        StoredImage storedImage = storedImageRepository.findOne(id);
         Image image = null;
-//        if(thumbnailed && !storedImage.getIsThumbnail()) {
-//            image = awsService.retrieve(storedImage.getThumbnailImage().getId().toString());
-//        } else if (!thumbnailed && storedImage.getIsThumbnail()) {
-//            image = awsService.retrieve(storedImage.getMainImage().getId().toString());
-//        } else{
-            image = awsService.retrieve(id.toString());
-//        }
-//        if(thumbnailed) {
-//            image = Thumbnails.of((BufferedImage)image)
-//                    .size(200, 200)
-//                    .outputFormat("jpg")
-//                    .asBufferedImage();
-//        }
+        image = awsService.retrieve(id.toString());
         return image;
     }
 
@@ -147,4 +137,5 @@ public class StoredImageService {
         storedImageRepository.delete(thumbnailImage.getId());
         return image;
     }
+
 }

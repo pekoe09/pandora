@@ -108,14 +108,17 @@ public class StoredImageController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> show(
-            @PathVariable Long id
-//            @RequestParam(required = false) Boolean thumbnail
-    ) {
+            @PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] imageBytes = null;
         try {
             StoredImage storedImage = storedImageService.findOne(id, userService.getCurrentUser());
-            Image image = storedImageService.getImage(storedImage.getId());
+            Image image = null;
+            if(storedImage != null) {
+                image = storedImageService.getImage(storedImage.getId());
+            } else {
+                image = storedImageService.getImage(0L);
+            }
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write((BufferedImage)image, "jpg", os);
             InputStream in = new ByteArrayInputStream(os.toByteArray());

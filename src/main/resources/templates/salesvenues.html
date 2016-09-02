@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - markkinat</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Markkinat</h1>
+            
+            <a class="btn btn-primary" href="#" th:href="@{/markkinat/lisaa}">
+                Lisää uusi markkina
+            </a>
+            
+            <article class="listing-s" th:each="salesVenue : ${salesVenues}">
+                <span class="listing-s-header">
+                    <a href="#" th:href="@{/markkinat/{id}/muokkaa(id=${salesVenue.id})}" th:text="${salesVenue.name}"></a>
+                </span>             
+                <form class="form-inline listing-buttons" action="#" th:action="@{/markkinat/{id}/poista(id=${salesVenue.id})}" method="post">
+                    <a href="#" th:href="@{/markkinat/{id}/muokkaa(id=${salesVenue.id})}" class="btn btn-primary">Muokkaa</a>
+                    <input type="button" value="Poista" class="btn btn-danger confirm-delete-modal" />
+                </form>
+            </article>  
+            
+                    
+            <div class="modal fade" id="delete-modal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <h3>Oletko varma että haluat poistaa markkinan?</h3>
+                        <div>
+                            <button class="btn btn-danger modal-delete">Kyllä</button>
+                            <button class="btn btn-default modal-cancel">Peruuta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <th:block th:fragment="pagescript">
+            <script src="/static/js/delete-confirm-modal.js"></script>
+        </th:block>  
+    </body>
+
+</html>

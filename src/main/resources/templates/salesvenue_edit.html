@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - markkinan muokkaus</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Muokkaa markkinan tietoja</h1>
+            <form id="collectionForm" role="form" action="#" th:action="@{/markkinat/{id}/muokkaa(id=${salesVenue.id})}" th:object="${salesVenue}" method="post">
+                <input type="hidden" id="id" name="id" th:value="${salesVenue.id}" />
+                <div class="form-group">
+                    <label for="name">Nimi</label>
+                    <input type="text" id="name" name="name" class="form-control" th:value="${salesVenue.name}"/>
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">virheviesti</p>
+                </div>
+
+                <input type="submit" value="Tallenna" class="btn btn-primary" />
+                <a th:href="@{/markkinat}" class="btn btn-default">Peruuta</a>
+            </form>
+        </div>
+    </body>
+
+</html>

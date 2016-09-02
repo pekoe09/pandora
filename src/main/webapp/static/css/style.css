@@ -31,6 +31,11 @@ body {
     -webkit-padding-start: 0;
 }
 
+.modal-dialog {
+    display: table;
+    max-width: 100%;
+}
+
 .question-series  {
     background-color: ghostwhite;
 }

@@ -1,5 +1,6 @@
 package pandora.controller;
 
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,58 +10,53 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pandora.domain.CollectibleItem;
-import pandora.domain.CollectibleSlot;
+import pandora.domain.SalesVenue;
 import pandora.domain.User;
-import pandora.service.CollectibleItemService;
-import pandora.service.CollectibleSlotService;
+import pandora.service.SalesVenueService;
 import pandora.service.UserService;
 
 @Controller
-@RequestMapping("/kohteet")
-public class CollectibleItemController {
+@RequestMapping("/markkinat")
+public class SalesVenueController {
     
     @Autowired
-    private CollectibleItemService collectibleItemService;
-    @Autowired
-    private CollectibleSlotService collectibleSlotService;
+    private SalesVenueService salesVenueService;
     @Autowired
     private UserService userService;
+    
+    @RequestMapping(method = RequestMethod.GET)
+    public String list(
+            Model model) {
+        User currentUser = userService.getCurrentUser();
+        List<SalesVenue> salesVenues = salesVenueService.findAll(currentUser);
+        model.addAttribute("salesVenues", salesVenues);
+        return "salesvenues";
+    }
     
     @RequestMapping(value = "/lisaa", method = RequestMethod.GET)
     public String create(
             Model model,
-            @ModelAttribute CollectibleItem collectibleItem,
-            @RequestParam(required = true) Long collectibleSlotId) {
-        User currentUser = userService.getCurrentUser();
-        CollectibleSlot collectibleSlot = null;
-        try {
-            collectibleSlot = collectibleSlotService.findOne(collectibleSlotId, currentUser);
-        } catch (IllegalArgumentException exc) {
-            return "redirect:/paasyvirhe";
-        }
-        model.addAttribute("collectibleSlot", collectibleSlot);
-        return "collectibleitem_add";
+            @ModelAttribute SalesVenue salesVenue) {
+        return "salesvenue_add";        
     }
     
     @RequestMapping(value = "/lisaa", method = RequestMethod.POST)
     public String add(
             Model model,
-            @Valid @ModelAttribute CollectibleItem collectibleItem,
+            @Valid @ModelAttribute SalesVenue salesVenue,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()) {
-            return "collectibleitem_add";
+            return "salesvenue_add";
         }
         User currentUser = userService.getCurrentUser();
         try {
-            collectibleItem = collectibleItemService.save(collectibleItem, currentUser);
+            salesVenue = salesVenueService.save(salesVenue, currentUser);
         } catch (IllegalArgumentException exc) {
-            return "collectibleitem_add";
+            return "salesvenue_add";
         }
-        return "redirect:/slotit/" + collectibleItem.getCollectibleSlot().getId();
+        return "redirect:/markkinat";
     }
     
     @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.GET)
@@ -68,48 +64,51 @@ public class CollectibleItemController {
             @PathVariable Long id,
             Model model) {
         User currentUser = userService.getCurrentUser();
-        CollectibleItem collectibleItem = null;
+        SalesVenue salesVenue = null;
         try {
-            collectibleItem = collectibleItemService.findOne(id, currentUser);
+            salesVenue = salesVenueService.findOne(id, currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
-        model.addAttribute("collectibleItem", collectibleItem);
-        return "collectibleitem_edit";
+        model.addAttribute("salesVenue", salesVenue);
+        return "salesvenue_edit";
     }
     
     @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.POST)
     public String update(
             Model model,
-            @Valid @ModelAttribute CollectibleItem collectibleItem,
+            @Valid @ModelAttribute SalesVenue salesVenue,
             BindingResult bindingResult,
             @PathVariable Long id,
             RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()) {
-            return "collectibleitem_edit";
+            return "salesvenue_edit";
         }
+        User currentUser = userService.getCurrentUser();
         try {
-            User currentUser = userService.getCurrentUser();
-            collectibleItem = collectibleItemService.save(collectibleItem, currentUser);
+            salesVenue = salesVenueService.save(salesVenue, currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
         redirectAttributes.addFlashAttribute("success", "Muutokset tallennettu!");
-        return "redirect:/slotit/" + collectibleItem.getCollectibleSlot().getId();
+        model.addAttribute("salesVenues", salesVenueService.findAll(currentUser));
+        return "redirect:/markkinat";
     }
     
     @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
     public String delete(
+            Model model,
             @PathVariable Long id,
             RedirectAttributes redirectAttributes) {
-        CollectibleItem collectibleItem = null;
+        SalesVenue salesVenue = null;
+        User currentUser = userService.getCurrentUser();
         try {
-            User currentUser = userService.getCurrentUser();
-            collectibleItem = collectibleItemService.delete(id, currentUser);
+            salesVenue = salesVenueService.delete(id, currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
-        redirectAttributes.addFlashAttribute("success", "Kohde poistettu!");
-        return "redirect:/slotit/" + collectibleItem.getCollectibleSlot().getId();
+        redirectAttributes.addFlashAttribute("success", "Markkina poistettu");
+        model.addAttribute("salesVenues", salesVenueService.findAll(currentUser));
+        return "redirect:/markkinat";
     }
-}
+ }

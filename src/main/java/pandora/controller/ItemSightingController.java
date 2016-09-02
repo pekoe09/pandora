@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pandora.domain.CollectibleItem;
 import pandora.domain.CollectibleSlot;
+import pandora.domain.ItemSighting;
 import pandora.domain.User;
-import pandora.service.CollectibleItemService;
 import pandora.service.CollectibleSlotService;
+import pandora.service.ItemSightingService;
 import pandora.service.UserService;
 
 @Controller
-@RequestMapping("/kohteet")
-public class CollectibleItemController {
+@RequestMapping("/havainnot")
+public class ItemSightingController {
     
     @Autowired
-    private CollectibleItemService collectibleItemService;
+    private ItemSightingService itemSightingService;
     @Autowired
     private CollectibleSlotService collectibleSlotService;
     @Autowired
@@ -32,8 +32,8 @@ public class CollectibleItemController {
     @RequestMapping(value = "/lisaa", method = RequestMethod.GET)
     public String create(
             Model model,
-            @ModelAttribute CollectibleItem collectibleItem,
-            @RequestParam(required = true) Long collectibleSlotId) {
+            @ModelAttribute ItemSighting itemSighting,
+            @RequestParam(required = true) Long collectibleSlotId){
         User currentUser = userService.getCurrentUser();
         CollectibleSlot collectibleSlot = null;
         try {
@@ -42,74 +42,76 @@ public class CollectibleItemController {
             return "redirect:/paasyvirhe";
         }
         model.addAttribute("collectibleSlot", collectibleSlot);
-        return "collectibleitem_add";
+        return "itemsighting_add";        
     }
     
     @RequestMapping(value = "/lisaa", method = RequestMethod.POST)
     public String add(
             Model model,
-            @Valid @ModelAttribute CollectibleItem collectibleItem,
+            @Valid @ModelAttribute ItemSighting itemSighting,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) {
-            return "collectibleitem_add";
+            model.addAttribute("collectibleSlot", itemSighting.getCollectibleSlot());
+            return "itemsighting_add";
         }
         User currentUser = userService.getCurrentUser();
         try {
-            collectibleItem = collectibleItemService.save(collectibleItem, currentUser);
+            itemSighting = itemSightingService.save(itemSighting, currentUser);
         } catch (IllegalArgumentException exc) {
-            return "collectibleitem_add";
+            model.addAttribute("collectibleSlot", itemSighting.getCollectibleSlot());
+            return "itemsighting_add";
         }
-        return "redirect:/slotit/" + collectibleItem.getCollectibleSlot().getId();
+        return "redirect:/slotit/" + itemSighting.getCollectibleSlot().getId();
     }
     
     @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.GET)
     public String edit(
             @PathVariable Long id,
-            Model model) {
+            Model model){
         User currentUser = userService.getCurrentUser();
-        CollectibleItem collectibleItem = null;
+        ItemSighting itemSighting = null;
         try {
-            collectibleItem = collectibleItemService.findOne(id, currentUser);
+            itemSighting = itemSightingService.findOne(id, currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
-        model.addAttribute("collectibleItem", collectibleItem);
-        return "collectibleitem_edit";
+        model.addAttribute("itemSighting", itemSighting);
+        return "itemsighting_edit";
     }
     
     @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.POST)
     public String update(
             Model model,
-            @Valid @ModelAttribute CollectibleItem collectibleItem,
+            @Valid @ModelAttribute ItemSighting itemSighting,
             BindingResult bindingResult,
             @PathVariable Long id,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) {
-            return "collectibleitem_edit";
+            return "itemsighting_edit";
         }
+        User currentUser = userService.getCurrentUser();
         try {
-            User currentUser = userService.getCurrentUser();
-            collectibleItem = collectibleItemService.save(collectibleItem, currentUser);
+            itemSighting = itemSightingService.save(itemSighting, currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
         redirectAttributes.addFlashAttribute("success", "Muutokset tallennettu!");
-        return "redirect:/slotit/" + collectibleItem.getCollectibleSlot().getId();
+        return "redirect:/slotit/" + itemSighting.getCollectibleSlot().getId();
     }
     
     @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
     public String delete(
             @PathVariable Long id,
-            RedirectAttributes redirectAttributes) {
-        CollectibleItem collectibleItem = null;
+            RedirectAttributes redirectAttributes){
+        ItemSighting itemSighting = null;
+        User currentUser = userService.getCurrentUser();
         try {
-            User currentUser = userService.getCurrentUser();
-            collectibleItem = collectibleItemService.delete(id, currentUser);
+            itemSighting = itemSightingService.delete(id, currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
-        redirectAttributes.addFlashAttribute("success", "Kohde poistettu!");
-        return "redirect:/slotit/" + collectibleItem.getCollectibleSlot().getId();
+        redirectAttributes.addFlashAttribute("success", "Havainto poistettu");
+        return "redirect:/slotit/" + itemSighting.getCollectibleSlot().getId();
     }
 }

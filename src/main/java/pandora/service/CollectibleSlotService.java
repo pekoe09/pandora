@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pandora.domain.CollectibleItem;
 import pandora.domain.CollectibleSlot;
+import pandora.domain.ItemSighting;
+import pandora.domain.SalesVenue;
 import pandora.domain.StoredImage;
 import pandora.domain.User;
 import pandora.repository.CollectibleSlotRepository;
@@ -68,6 +70,19 @@ public class CollectibleSlotService {
             collectibleSlot.setMainImageId(image.getId());
         }
         return collectibleSlotRepository.save(collectibleSlot);
+    }
+    
+    public CollectibleSlot addItemSighting(Long id, ItemSighting itemSighting) {
+        CollectibleSlot collectibleSlot = collectibleSlotRepository.findOne(id);
+        if(collectibleSlot == null) {
+            throw new IllegalArgumentException("Slottia ei löydy!");
+        }
+        if(!itemSighting.getUser().getId().equals(collectibleSlot.getUser().getId())) {
+            throw new IllegalArgumentException("Käyttäjän oikeudet eivät riitä operaatioon!");
+        }
+        collectibleSlot.getItemSightings().add(itemSighting);
+        collectibleSlot = collectibleSlotRepository.save(collectibleSlot);
+        return collectibleSlot;
     }
 
     public CollectibleSlot delete(Long id, User currentUser) {

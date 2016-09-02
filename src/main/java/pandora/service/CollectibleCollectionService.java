@@ -1,6 +1,5 @@
 package pandora.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,14 @@ public class CollectibleCollectionService {
         }
     }
 
+    public CollectibleCollection findOne(Long id, User currentUser) {
+        CollectibleCollection collectibleCollection = collectibleCollectionRepository.findOne(id);
+        if(!currentUser.isIsAdmin() && !collectibleCollection.getUser().getId().equals(currentUser.getId())) {
+            collectibleCollection = null;
+        }
+        return collectibleCollection;
+    }
+    
     public CollectibleCollection save(CollectibleCollection collectibleCollection, User currentUser) {
         if(currentUser == null) {
             throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
@@ -50,10 +57,6 @@ public class CollectibleCollectionService {
         collectibleCollection.setCollectibleSets(sets);
         collectibleCollection = collectibleCollectionRepository.save(collectibleCollection);
         return collectibleCollection;
-    }
-
-    public CollectibleCollection findOne(Long id, User currentUser) {
-        return collectibleCollectionRepository.findOne(id);
     }
 
     public CollectibleCollection delete(Long id, User currentUser) {

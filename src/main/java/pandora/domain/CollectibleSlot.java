@@ -29,6 +29,8 @@ public class CollectibleSlot extends BaseModel {
     private long mainImageId;
     @OneToMany(mappedBy = "collectibleSlot")
     private List<CollectibleItem> collectibleItems;
+    @OneToMany(mappedBy = "collectibleSlot")
+    private List<ItemSighting> itemSightings;
     @ManyToOne
     private CollectibleSet collectibleSet;
     @ManyToOne
@@ -37,6 +39,7 @@ public class CollectibleSlot extends BaseModel {
     public CollectibleSlot() {
         this.storedImages = new ArrayList<>();
         this.collectibleItems = new ArrayList<>();
+        this.itemSightings = new ArrayList<>();
     }
 
     public String getName() {
@@ -67,10 +70,6 @@ public class CollectibleSlot extends BaseModel {
         return storedImages;
     }
 
-    public void setStoredImages(List<StoredImage> storedImages) {
-        this.storedImages = storedImages;
-    }
-
     public long getMainImageId() {
         return mainImageId;
     }
@@ -83,8 +82,8 @@ public class CollectibleSlot extends BaseModel {
         return collectibleItems;
     }
 
-    public void setCollectibleItems(List<CollectibleItem> collectibleItems) {
-        this.collectibleItems = collectibleItems;
+    public List<ItemSighting> getItemSightings() {
+        return itemSightings;
     }
 
     public CollectibleSet getCollectibleSet() {

@@ -1,5 +1,6 @@
 package pandora.domain;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -33,11 +34,17 @@ public class User extends BaseModel {
     @OneToMany(mappedBy = "user")
     private List<CollectibleItem> collectibleItems;
     @OneToMany(mappedBy = "user")
+    private List<ItemSighting> itemSightings;
+    @OneToMany(mappedBy = "user")
+    private List<SalesVenue> salesVenues;
+    @OneToMany(mappedBy = "user")
     private List<StoredImage> storedImages;
     
     public User(){
         this.collectibleCollections = new ArrayList<>();
         this.collectibleSets = new ArrayList<>();
+        this.itemSightings = new ArrayList<>();
+        this.salesVenues = new ArrayList<>();
     }
 
     public String getLastName() {
@@ -93,40 +100,29 @@ public class User extends BaseModel {
         return collectibleCollections;
     }
 
-    public void setCollectibleCollections(List<CollectibleCollection> collectibleCollections) {
-        this.collectibleCollections = collectibleCollections;
-    }
-
     public List<CollectibleSet> getCollectibleSets() {
         return collectibleSets;
-    }
-
-    public void setCollectibleSets(List<CollectibleSet> collectibleSets) {
-        this.collectibleSets = collectibleSets;
     }
 
     public List<CollectibleSlot> getCollectibleSlots() {
         return collectibleSlots;
     }
 
-    public void setCollectibleSlots(List<CollectibleSlot> collectibleSlots) {
-        this.collectibleSlots = collectibleSlots;
-    }
-
     public List<CollectibleItem> getCollectibleItems() {
         return collectibleItems;
     }
 
-    public void setCollectibleItems(List<CollectibleItem> collectibleItems) {
-        this.collectibleItems = collectibleItems;
+    public List<ItemSighting> getItemSightings() {
+        return itemSightings;
+    }
+
+    public List<SalesVenue> getSalesVenues() {
+        return salesVenues;
     }
 
     public List<StoredImage> getStoredImages() {
         return storedImages;
     }
 
-    public void setStoredImages(List<StoredImage> storedImages) {
-        this.storedImages = storedImages;
-    }
     
 }

@@ -19,6 +19,12 @@ public class CollectibleSlotService {
     private CollectibleSlotRepository collectibleSlotRepository;
     @Autowired
     private CollectibleSetService collectibleSetService;
+    @Autowired
+    private StoredImageService storedImageService;
+    @Autowired
+    private CollectibleItemService collectibleItemService;
+    @Autowired
+    private UserService userService;
 
     public CollectibleSlot findOne(Long id, User currentUser) {
         if(currentUser == null) {
@@ -42,6 +48,7 @@ public class CollectibleSlotService {
         collectibleSlot.setUser(currentUser);
         collectibleSlot = collectibleSlotRepository.save(collectibleSlot);
         collectibleSetService.addCollectibleSlot(collectibleSlot.getCollectibleSet().getId(), collectibleSlot);
+        userService.addCollectibleSlot(currentUser.getId(), collectibleSlot);        
         return collectibleSlot;
     }
     
@@ -91,6 +98,13 @@ public class CollectibleSlotService {
         }
         CollectibleSlot collectibleSlot = findOne(id, currentUser);
         if(collectibleSlot != null) {
+            collectibleSetService.removeCollectibleSlot(collectibleSlot);
+            for(CollectibleItem collectibleItem : collectibleSlot.getCollectibleItems()) {
+                collectibleItemService.delete(collectibleItem.getId(), currentUser);
+            }
+            for(StoredImage storedImage : collectibleSlot.getStoredImages()) {
+                storedImageService.delete(storedImage.getId(), currentUser);
+            }
             collectibleSlotRepository.delete(id);
         }
         return collectibleSlot;
@@ -110,6 +124,14 @@ public class CollectibleSlotService {
             }           
         }
         collectibleSlotRepository.save(collectibleSlot);
+    }
+
+    void removeCollectibleItem(CollectibleItem collectibleItem) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void removeItemSighting(ItemSighting itemSighting) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

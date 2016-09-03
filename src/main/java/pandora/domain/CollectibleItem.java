@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
 import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,6 +19,7 @@ public class CollectibleItem extends BaseModel{
     private String comment;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private DateTime acquisitionDate;
+    @Min(0)
     private Float acquisitionPrice;
     @ManyToOne
     private CollectibleSlot collectibleSlot;

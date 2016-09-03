@@ -28,6 +28,10 @@ public class StoredImageService {
     private CollectibleSlotService collectibleSlotService;
     @Autowired
     private CollectibleItemService collectibleItemService;
+    @Autowired
+    private ItemSightingService itemSightingService;
+    @Autowired
+    private UserService userService;
 
     public StoredImage save(StoredImage storedImage, MultipartFile image, User currentUser) throws IOException {
         if(currentUser == null) {
@@ -50,6 +54,7 @@ public class StoredImageService {
         thumbnailImage.setMainImage(storedImage);
         thumbnailImage.setCollectibleItem(storedImage.getCollectibleItem());
         thumbnailImage.setCollectibleSlot(storedImage.getCollectibleSlot());
+        thumbnailImage.setItemSighting(storedImage.getItemSighting());
         thumbnailImage = storedImageRepository.save(thumbnailImage);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         int thumbnailHeight = storedImage.getCollectibleItem() != null ? storedImage.getCollectibleItem().getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight()
@@ -68,10 +73,15 @@ public class StoredImageService {
         if(storedImage.getCollectibleItem() != null) {
             collectibleItemService.addStoredImage(storedImage.getCollectibleItem().getId(), storedImage);
             collectibleItemService.addStoredImage(storedImage.getCollectibleItem().getId(), thumbnailImage);
-        } else {
+        } else if (storedImage.getCollectibleSlot() != null){
             collectibleSlotService.addStoredImage(storedImage.getCollectibleSlot().getId(), storedImage);
             collectibleSlotService.addStoredImage(storedImage.getCollectibleSlot().getId(), thumbnailImage);
+        } else {
+            itemSightingService.addStoredImage(storedImage.getItemSighting().getId(), storedImage);
+            itemSightingService.addStoredImage(storedImage.getItemSighting().getId(), thumbnailImage);
         }
+        userService.addStoredImage(currentUser.getId(), storedImage);
+        userService.addStoredImage(currentUser.getId(), thumbnailImage);
         return storedImage;
     }
     
@@ -127,6 +137,9 @@ public class StoredImageService {
         } else if(image.getCollectibleSlot() != null) {
             collectibleSlotService.removeStoredImage(mainImage);
             collectibleSlotService.removeStoredImage(thumbnailImage);
+        } else {
+            itemSightingService.removeStoredImage(mainImage);
+            itemSightingService.removeStoredImage(thumbnailImage);
         }
         mainImage.setThumbnailImage(null);
         thumbnailImage.setMainImage(null);

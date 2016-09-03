@@ -16,7 +16,7 @@
                 <input type="hidden" id="collectibleItem" name="collectibleItem" th:value="${collectibleItem} != null ? ${collectibleItem.id} : null" />
                 <div class="form-group">
                     <label for="image">Tiedostopolku</label>
-                    <input type="file" name="image" id="image"/>
+                    <input type="file" name="image" id="image" />
                 </div>
                 <div class="form-group">
                     <label for="caption">Kuvateksti</label>
@@ -24,7 +24,12 @@
                     <p th:if="${#fields.hasErrors('caption')}" th:errors="*{caption}">Virheviesti</p>
                 </div>
                 
-                <input type="submit" value="Lisää kuva" class="btn btn-primary" />
+                <input type="submit" value="Lisää kuva" class="btn btn-warning" />
+                <a th:href="(${collectibleSlot} != null) 
+                            ? @{/slotit/{id}(id=${collectibleSlot.id})}
+                            : @{/slotit/{id}(id=${collectibleItem.collectibleSlot.id})}" class="btn btn-default">
+                    Peruuta
+                </a>
             </form>
         </div>
     </body>

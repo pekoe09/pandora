@@ -29,7 +29,8 @@
                     <input type="number" id="ordinality" name="ordinality" class="form-control" min="1" th:value="${collectibleSlot.ordinality}" />
                 </div>
                 
-                <input type="submit" value="Tallenna" class="btn btn-primary" />
+                <input type="submit" value="Tallenna" class="btn btn-warning" />
+                <a th:href="@{/kokoelmat/{id}(id=${collectibleSet.collectibleCollection.id})}" class="btn btn-default">Peruuta</a>
             </form>
         </div>
     </body>

@@ -32,7 +32,7 @@
                     <p th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">Virheviesti</p>
                 </div>
                 
-                <input type="submit" value="Tallenna" class="btn btn-primary" />
+                <input type="submit" value="Tallenna" class="btn btn-warning" />
                 <a th:href="@{/slotit/{id}(id=${collectibleSlot.id})}" class="btn btn-default">Peruuta</a>
             </form>
         </div>

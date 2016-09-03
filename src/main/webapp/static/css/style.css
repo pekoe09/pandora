@@ -1,8 +1,8 @@
 body {
   padding-top: 40px;
   margin: 0px 30px;
-  background: #ECECEC;
-  color: #575353;
+  //background: #ECECEC;
+  //color: #575353;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -34,18 +34,6 @@ body {
 .modal-dialog {
     display: table;
     max-width: 100%;
-}
-
-.question-series  {
-    background-color: ghostwhite;
-}
-
-.question-series-list-bar {
-    background-color: #575353;
-    color: ghostwhite;
-    font-size: 1.4em;
-    padding: 5px 10px 5px 10px;
-    border-radius: 5px;
 }
 
 .error {
@@ -85,6 +73,9 @@ table tr th {
     border-style: solid;
     border-color: lightskyblue;
     border-width: 2px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
     margin: 10px 0 10px 0;
     padding: 10px;
     overflow: hidden;
@@ -99,7 +90,8 @@ table tr th {
 }
 
 .slot-list-article {
-    border-color: #3c763d;
+    //border-color: #3c763d;
+    border-color: lightskyblue;
     border-style: solid;
     border-width: 2px;
     -webkit-border-radius: 8px;
@@ -129,7 +121,7 @@ table tr th {
 
 .slot-list-title {
     font-size: 1.4em;
-    color: #3c763d;
+    color: lightskyblue;
 }
 
 .slot-item-title {
@@ -139,11 +131,12 @@ table tr th {
 .slot-item-link {
     text-decoration: none;
     font-weight: 700;
-    color: #3c763d;
+    color: lightskyblue;
 }
 
 .parentset-header {
-    background-color: #67b168;
+    //background-color: #67b168;
+    background-color: lightskyblue; 
     color: #fff; 
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
@@ -178,7 +171,7 @@ table tr th {
 }
 
 .item-listing {
-    border: #3c763d solid 2px;
+    border: lightskyblue solid 2px;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
@@ -207,7 +200,7 @@ table tr th {
 .li-submit {
     background: transparent;
     border: none;
-    color: #333;
+    //color: #333;
     font-weight: 400;
     line-height: 1.42857143;
     padding: 3px 20px;

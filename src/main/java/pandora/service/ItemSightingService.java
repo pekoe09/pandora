@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pandora.domain.ItemSighting;
+import pandora.domain.StoredImage;
 import pandora.domain.User;
 import pandora.repository.ItemSightingRepository;
 
@@ -16,6 +17,8 @@ public class ItemSightingService {
     private SalesVenueService salesVenueService;
     @Autowired
     private CollectibleSlotService collectibleSlotService;
+    @Autowired
+    private UserService userService;
     
     public List<ItemSighting> findAll(User currentUser) {
         if(currentUser == null) {
@@ -44,12 +47,23 @@ public class ItemSightingService {
         itemSighting = itemSightingRepository.save(itemSighting);
         salesVenueService.addItemSighting(itemSighting.getSalesVenue().getId(), itemSighting);
         collectibleSlotService.addItemSighting(itemSighting.getCollectibleSlot().getId(), itemSighting);
+        userService.addItemSighting(currentUser.getId(), itemSighting);
         return itemSighting;
     }
         
     public ItemSighting delete(Long id, User currentUser) {
         ItemSighting itemSighting = itemSightingRepository.findOne(id);
+        salesVenueService.removeItemSighting(itemSighting);
+        collectibleSlotService.removeItemSighting(itemSighting);
         itemSightingRepository.delete(id);
         return itemSighting;
+    }
+
+    void addStoredImage(Long id, StoredImage storedImage) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void removeStoredImage(StoredImage mainImage) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

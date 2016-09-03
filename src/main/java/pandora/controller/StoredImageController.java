@@ -6,8 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
@@ -31,10 +29,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pandora.domain.CollectibleItem;
 import pandora.domain.CollectibleSlot;
+import pandora.domain.ItemSighting;
 import pandora.domain.StoredImage;
 import pandora.domain.User;
 import pandora.service.CollectibleItemService;
 import pandora.service.CollectibleSlotService;
+import pandora.service.ItemSightingService;
 import pandora.service.StoredImageService;
 import pandora.service.UserService;
 
@@ -49,6 +49,8 @@ public class StoredImageController {
     @Autowired
     private CollectibleItemService collectibleItemService;
     @Autowired
+    private ItemSightingService itemSightingService;
+    @Autowired
     private UserService userService;
     @Autowired
     private ServletContext servletContext;
@@ -58,21 +60,26 @@ public class StoredImageController {
             Model model,
             @ModelAttribute StoredImage storedImage,
             @RequestParam(required = false) Long collectibleSlotId,
-            @RequestParam(required = false) Long collectibleItemId) {
+            @RequestParam(required = false) Long collectibleItemId,
+            @RequestParam(required = false) Long itemSightingId) {
         User currentUser = userService.getCurrentUser();
         CollectibleSlot collectibleSlot = null;
         CollectibleItem collectibleItem = null;
+        ItemSighting itemSighting = null;
         try {
             if (collectibleSlotId != null) {
                 collectibleSlot = collectibleSlotService.findOne(collectibleSlotId, currentUser);
-            } else {
+            } else if (collectibleItemId != null) {
                 collectibleItem = collectibleItemService.findOne(collectibleItemId, currentUser);
+            } else {
+                itemSighting = itemSightingService.findOne(itemSightingId, currentUser);
             }
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
         model.addAttribute("collectibleSlot", collectibleSlot);
         model.addAttribute("collectibleItem", collectibleItem);
+        model.addAttribute("itemSighting", itemSighting);
         return "storedimage_add";
     }
     
@@ -86,6 +93,7 @@ public class StoredImageController {
         if(bindingResult.hasErrors() || image.isEmpty()) {
             model.addAttribute("collectibleSlot", storedImage.getCollectibleSlot());
             model.addAttribute("collectibleItem", storedImage.getCollectibleItem());
+            model.addAttribute("itemSighting", storedImage.getItemSighting());
             return "storedimage_add";
         }
         User currentUser = userService.getCurrentUser();
@@ -95,13 +103,19 @@ public class StoredImageController {
             model.addAttribute("error", "Tiedostoa " + image.getOriginalFilename() + " ei pystytty lataamaan!");
             model.addAttribute("collectibleSlot", storedImage.getCollectibleSlot());
             model.addAttribute("collectibleItem", storedImage.getCollectibleItem());
+            model.addAttribute("itemSighting", storedImage.getItemSighting());
             return "storedimage_add";
         } catch (IllegalArgumentException exc) {
             model.addAttribute("collectibleSlot", storedImage.getCollectibleSlot());
             model.addAttribute("collectibleItem", storedImage.getCollectibleItem());
+            model.addAttribute("itemSighting", storedImage.getItemSighting());
             return "storedimage_add";
         }
-        Long slotId = storedImage.getCollectibleItem() != null ? storedImage.getCollectibleItem().getCollectibleSlot().getId() : storedImage.getCollectibleSlot().getId();
+        Long slotId = storedImage.getCollectibleItem() != null 
+                ? storedImage.getCollectibleItem().getCollectibleSlot().getId() 
+                : (storedImage.getCollectibleSlot() != null ? 
+                    storedImage.getCollectibleSlot().getId()
+                    : storedImage.getItemSighting().getCollectibleSlot().getId());
         return "redirect:/slotit/" + slotId;
     }
     
@@ -145,7 +159,9 @@ public class StoredImageController {
         }
         Long imageParentSlotId = storedImage.getCollectibleItem() != null
             ? storedImage.getCollectibleItem().getCollectibleSlot().getId()
-            : storedImage.getCollectibleSlot().getId();
+            : (storedImage.getCollectibleSlot() != null 
+                ? storedImage.getCollectibleSlot().getId()
+                : storedImage.getItemSighting().getCollectibleSlot().getId());
         redirectAttributes.addFlashAttribute("success", "Kuva poistettu!");
         return "redirect:/slotit/" + imageParentSlotId;
     }    

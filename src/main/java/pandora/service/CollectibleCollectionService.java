@@ -15,6 +15,10 @@ public class CollectibleCollectionService {
     
     @Autowired
     private CollectibleCollectionRepository collectibleCollectionRepository;
+    @Autowired
+    private CollectibleSetService collectibleSetService;
+    @Autowired
+    private UserService userService;
 
     public List<CollectibleCollection> findAll(User currentUser) {
         if(currentUser == null) {
@@ -41,6 +45,7 @@ public class CollectibleCollectionService {
         }
         collectibleCollection.setUser(currentUser);
         collectibleCollection = collectibleCollectionRepository.save(collectibleCollection);
+        userService.addCollectibleCollection(currentUser.getId(), collectibleCollection);
         return collectibleCollection;
     }
     
@@ -61,8 +66,15 @@ public class CollectibleCollectionService {
 
     public CollectibleCollection delete(Long id, User currentUser) {
         CollectibleCollection collectibleCollection = collectibleCollectionRepository.findOne(id);
+        for(CollectibleSet collectibleSet : collectibleCollection.getCollectibleSets()) {
+            collectibleSetService.delete(collectibleSet.getId(), currentUser);
+        }
         collectibleCollectionRepository.delete(id);
         return collectibleCollection;
+    }
+
+    void removeCollectibleSet(CollectibleSet collectibleSet) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

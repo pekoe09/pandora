@@ -16,6 +16,10 @@ public class CollectibleItemService {
     private CollectibleItemRepository collectibleItemRepository;
     @Autowired
     private CollectibleSlotService collectibleSlotService;
+    @Autowired
+    private StoredImageService storedImageService;
+    @Autowired
+    private UserService userService;
 
     public CollectibleItem save(CollectibleItem collectibleItem, User currentUser) {
         if(currentUser == null) {
@@ -24,6 +28,7 @@ public class CollectibleItemService {
         collectibleItem.setUser(currentUser);
         collectibleItem = collectibleItemRepository.save(collectibleItem);
         collectibleSlotService.addCollectibleItem(collectibleItem.getCollectibleSlot().getId(), collectibleItem);
+        userService.addCollectibleItem(currentUser.getId(), collectibleItem);
         return collectibleItem;
     }
     
@@ -63,6 +68,10 @@ public class CollectibleItemService {
         }
         CollectibleItem collectibleItem = findOne(id, currentUser);
         if(collectibleItem != null) {
+            collectibleSlotService.removeCollectibleItem(collectibleItem);
+            for(StoredImage storedImage : collectibleItem.getStoredImages()) {
+                storedImageService.delete(storedImage.getId(), currentUser);
+            }
             collectibleItemRepository.delete(id);
         }
         return collectibleItem;

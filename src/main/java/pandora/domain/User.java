@@ -3,10 +3,12 @@ package pandora.domain;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -14,14 +16,25 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 @Table(name = "pandorauser")
 public class User extends BaseModel {
     
+    @Column(length = 100)
+    @Length(max = 100, message = "Sukunimi voi olla enintään 100 merkkiä pitkä")
     @NotBlank(message = "Sukunimi ei saa olla tyhjä")
     private String lastName;
+    @Column(length = 100)
+    @Length(max = 100, message = "Etunimi voi olla enintään 100 merkkiä pitkä")
     @NotBlank(message = "Etunimi ei saa olla tyhjä")
     private String firstName;
+    @Column(length = 300)
+    @Length(max = 300, message = "Sähköpostiosoite voi olla enintään 300 merkkiä pitkä")
     @NotBlank(message = "Sähköpostiosoite ei saa olla tyhjä")
     @Email
     private String eMail;
+    @Column(length = 100)
+    @Length(max = 100, message = "Käyttäjätunnus voi olla enintään 100 merkkiä pitkä")
+    @NotBlank(message = "Käyttäjätunnus ei saa olla tyhjä")
     private String username;
+    @Column(length = 100)
+    @Length(max = 100, message = "Salasana voi olla enintään 100 merkkiä pitkä")
     @NotBlank(message = "Salasana ei saa olla tyhjä")
     private String password;
     private boolean isAdmin;
@@ -43,8 +56,12 @@ public class User extends BaseModel {
     public User(){
         this.collectibleCollections = new ArrayList<>();
         this.collectibleSets = new ArrayList<>();
+        this.collectibleSlots = new ArrayList<>();
+        this.collectibleItems = new ArrayList<>();
         this.itemSightings = new ArrayList<>();
         this.salesVenues = new ArrayList<>();
+        this.storedImages = new ArrayList<>();
+        this.setIsAdmin(false);
     }
 
     public String getLastName() {

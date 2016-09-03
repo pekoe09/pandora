@@ -21,7 +21,7 @@
                     <p th:if="${#fields.hasErrors('thumbnailHeight')}" th:errors="*{thumbnailHeight}">virheviesti</p>
                 </div>
 
-                <input type="submit" value="Tallenna" class="btn btn-primary" />
+                <input type="submit" value="Tallenna" class="btn btn-warning" />
                 <a th:href="@{/kokoelmat}" class="btn btn-default">Peruuta</a>
             </form>
         </div>

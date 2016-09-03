@@ -25,6 +25,8 @@ public class StoredImage extends BaseModel {
     @ManyToOne
     private CollectibleItem collectibleItem;
     @ManyToOne
+    private ItemSighting itemSighting;
+    @ManyToOne
     private User user;
     
     public StoredImage(){
@@ -85,6 +87,14 @@ public class StoredImage extends BaseModel {
 
     public void setCollectibleItem(CollectibleItem collectibleItem) {
         this.collectibleItem = collectibleItem;
+    }
+
+    public ItemSighting getItemSighting() {
+        return itemSighting;
+    }
+
+    public void setItemSighting(ItemSighting itemSighting) {
+        this.itemSighting = itemSighting;
     }
 
     public User getUser() {

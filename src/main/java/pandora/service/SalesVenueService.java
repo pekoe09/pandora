@@ -13,6 +13,8 @@ public class SalesVenueService {
     
     @Autowired
     private SalesVenueRepository salesVenueRepository;
+    @Autowired
+    private UserService userService;
     
     public List<SalesVenue> findAll(User currentUser) {
         if(currentUser == null) {
@@ -39,6 +41,7 @@ public class SalesVenueService {
         }
         salesVenue.setUser(currentUser);
         salesVenue = salesVenueRepository.save(salesVenue);
+        userService.addSalesVenue(currentUser.getId(), salesVenue);
         return salesVenue;
     }
     
@@ -59,5 +62,9 @@ public class SalesVenueService {
         SalesVenue salesVenue = salesVenueRepository.findOne(id);
         salesVenueRepository.delete(id);
         return salesVenue;
+    }
+
+    void removeItemSighting(ItemSighting itemSighting) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

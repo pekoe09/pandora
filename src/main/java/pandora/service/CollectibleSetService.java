@@ -17,6 +17,10 @@ public class CollectibleSetService {
     private CollectibleSetRepository collectibleSetRepository;
     @Autowired
     private CollectibleCollectionService collectibleCollectionService;
+    @Autowired
+    private CollectibleSlotService collectibleSlotService;
+    @Autowired
+    private UserService userService;
 
     public CollectibleSet save(CollectibleSet collectibleSet, User currentUser) {
         if(currentUser == null) {
@@ -25,6 +29,7 @@ public class CollectibleSetService {
         collectibleSet.setUser(currentUser);
         collectibleSet = collectibleSetRepository.save(collectibleSet);
         collectibleCollectionService.addCollectibleSet(collectibleSet.getCollectibleCollection().getId(), collectibleSet);
+        userService.addCollectibleSet(currentUser.getId(), collectibleSet);
         if(collectibleSet.getParentSet() != null) {
             addCollectibleSet(collectibleSet.getParentSet().getId(), collectibleSet);
         }
@@ -74,6 +79,36 @@ public class CollectibleSetService {
         collectibleSet.setCollectibleSlots(slots);
         collectibleSet = collectibleSetRepository.save(collectibleSet);
         return collectibleSet;
+    }
+    
+    public CollectibleSet delete(Long id, User currentUser) {
+        if(currentUser == null) {
+            throw new IllegalArgumentException("Käyttäjätieto puuttuu!");
+        }
+        CollectibleSet collectibleSet = findOne(id, currentUser);
+        if(collectibleSet != null) {
+            if(collectibleSet.getParentSet() != null) {
+                removeChildSet(collectibleSet);
+            }
+            for(CollectibleSet childSet : collectibleSet.getChildSets()) {
+                childSet.setParentSet(null);
+                collectibleSetRepository.save(childSet);
+            }
+            collectibleCollectionService.removeCollectibleSet(collectibleSet);
+            for(CollectibleSlot collectibleSlot : collectibleSet.getCollectibleSlots()) {
+                collectibleSlotService.delete(collectibleSlot.getId(), currentUser);
+            }
+            collectibleSetRepository.delete(id);
+        }
+        return collectibleSet;
+    }
+
+    public void removeCollectibleSlot(CollectibleSlot collectibleSlot) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void removeChildSet(CollectibleSet collectibleSet) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

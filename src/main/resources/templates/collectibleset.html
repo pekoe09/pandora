@@ -52,8 +52,8 @@
                         <div th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                             <div class="slot-item-title">Kohteet</div>
                             <a href="#" th:href="@{/kohteet/{id}(id=${collectibleItem.id})}" class="slot-item-link"> 
-                                <span th:text="${#dates.format(collectibleItem.acquisitionDate, 'd.MM.yyyy')} 
-                                      + ' ' + ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2)} + 'eur'"></span>
+                                <span th:text="|${#dates.format(collectibleItem.acquisitionDate, 'd.M.yyyy')} 
+                                                 ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2, 'COMMA')} eur|"></span>
                             </a>
                         </div>    
                     </div>

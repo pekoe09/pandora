@@ -11,10 +11,12 @@ import pandora.domain.CollectibleCollection;
 import pandora.domain.CollectibleItem;
 import pandora.domain.CollectibleSet;
 import pandora.domain.CollectibleSlot;
+import pandora.domain.SalesVenue;
 import pandora.service.CollectibleCollectionService;
 import pandora.service.CollectibleItemService;
 import pandora.service.CollectibleSetService;
 import pandora.service.CollectibleSlotService;
+import pandora.service.SalesVenueService;
 
 @Configuration
 @Profile(value = {"dev", "default"})
@@ -30,6 +32,8 @@ public class DevProfile {
     private CollectibleSlotService collectibleSlotService;
     @Autowired
     private CollectibleItemService collectibleItemService;
+    @Autowired
+    private SalesVenueService salesVenueService;
     
     @PostConstruct
     public void init(){
@@ -86,5 +90,15 @@ public class DevProfile {
         collectibleItem.setCollectibleSlot(collectibleSlot);
         collectibleItem.setUser(u1);
         collectibleItem = collectibleItemService.save(collectibleItem, u1);
+        
+        // add sales venues
+        SalesVenue salesVenue = new SalesVenue();
+        salesVenue.setName("Eka markkina");
+        salesVenue.setUser(u1);
+        salesVenue = salesVenueService.save(salesVenue, u1);
+        salesVenue = new SalesVenue();
+        salesVenue.setName("Toka markkina");
+        salesVenue.setUser(u1);
+        salesVenue = salesVenueService.save(salesVenue, u1);
     }        
 }

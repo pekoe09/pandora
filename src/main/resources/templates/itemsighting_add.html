@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - kohdehavainnon lisääminen</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Lisää uusi kohdehavainto</h1>
+            <form id="itemSightingForm" role="form" action="#" th:action="@{/havainnot/lisaa}" th:object="${itemSighting}" method="post">
+                <input type="hidden" id="collectibleSlot" name="collectibleSlot" th:value="${collectibleSlot.id}" />
+                
+                <div class="form-group">
+                    <label class="control-label" for="salesVenue">Markkina</label>
+                    <select class="form-control" id="salesVenue" name="salesVenue">
+                        <option th:each="salesVenue : ${salesVenues}"
+                                th:text="${salesVenue.name}"
+                                th:value="${salesVenue.id}"
+                                th:selected="${itemSighting.salesVenue != null} ? ${itemSighting.salesVenue.id == salesVenue.id} : false"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('salesVenue')}" th:errors="*{salesVenue}">virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="sightingDate">Pvm</label>
+                    <input type="text" id="sightingDate" name="sightingDate" class="form-control dateinfo" 
+                           th:value="${itemSighting.sightingDate == null ? null : #dates.format(itemSighting.sightingDate, 'dd.MM.yyyy')}"/>
+                    <p th:if="${#fields.hasErrors('sightingDate')}" th:errors="*{sightingDate}">virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="price">Hinta</label>
+                    <input type="number" id="price" name="price" class="form-control" min="0" step="0.01"
+                           th:value="${itemSighting.price}"/>
+                    <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}">virheviesti</p>
+                </div>
+
+                <input type="submit" value="Tallenna" class="btn btn-warning" />
+                <a th:href="@{/slotit/{id}(id=${collectibleSlot.id})}" class="btn btn-default">Peruuta</a>
+            </form>
+        </div>
+    </body>
+
+</html>

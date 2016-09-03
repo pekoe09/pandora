@@ -1,5 +1,7 @@
 package pandora.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pandora.domain.CollectibleSlot;
 import pandora.domain.ItemSighting;
+import pandora.domain.SalesVenue;
 import pandora.domain.User;
 import pandora.service.CollectibleSlotService;
 import pandora.service.ItemSightingService;
+import pandora.service.SalesVenueService;
 import pandora.service.UserService;
 
 @Controller
@@ -27,6 +31,8 @@ public class ItemSightingController {
     @Autowired
     private CollectibleSlotService collectibleSlotService;
     @Autowired
+    private SalesVenueService salesVenueService;
+    @Autowired
     private UserService userService;
     
     @RequestMapping(value = "/lisaa", method = RequestMethod.GET)
@@ -36,12 +42,15 @@ public class ItemSightingController {
             @RequestParam(required = true) Long collectibleSlotId){
         User currentUser = userService.getCurrentUser();
         CollectibleSlot collectibleSlot = null;
+        List<SalesVenue> salesVenues = new ArrayList<>();
         try {
             collectibleSlot = collectibleSlotService.findOne(collectibleSlotId, currentUser);
+            salesVenues = salesVenueService.findAll(currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
         model.addAttribute("collectibleSlot", collectibleSlot);
+        model.addAttribute("salesVenues", salesVenues);
         return "itemsighting_add";        
     }
     
@@ -52,6 +61,8 @@ public class ItemSightingController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) {
+            User currentUser = userService.getCurrentUser();
+            model.addAttribute("salesVenues", salesVenueService.findAll(currentUser));
             model.addAttribute("collectibleSlot", itemSighting.getCollectibleSlot());
             return "itemsighting_add";
         }
@@ -71,12 +82,15 @@ public class ItemSightingController {
             Model model){
         User currentUser = userService.getCurrentUser();
         ItemSighting itemSighting = null;
+        List<SalesVenue> salesVenues = new ArrayList<>();
         try {
             itemSighting = itemSightingService.findOne(id, currentUser);
+            salesVenues = salesVenueService.findAll(currentUser);
         } catch (IllegalArgumentException exc) {
             return "redirect:/paasyvirhe";
         }
         model.addAttribute("itemSighting", itemSighting);
+        model.addAttribute("salesVenues", salesVenues);
         return "itemsighting_edit";
     }
     
@@ -88,6 +102,8 @@ public class ItemSightingController {
             @PathVariable Long id,
             RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) {
+            User currentUser = userService.getCurrentUser();
+            model.addAttribute("salesVenues", salesVenueService.findAll(currentUser));
             return "itemsighting_edit";
         }
         User currentUser = userService.getCurrentUser();

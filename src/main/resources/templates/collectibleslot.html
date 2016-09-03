@@ -29,33 +29,17 @@
             <a href="#" th:href="@{/kokoelmat/{id}(id=${collectibleSlot.collectibleSet.collectibleCollection.id})}">
                 Kokoelmaan</a>
             <p th:text="${collectibleSlot.description}"></p>
-            
-            <h3>Referenssikuvat</h3>
-            <a href="#" th:href="@{/kuvat/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">
-                Lisää kuva</a>
-            <div class="image-row">
-                <div th:each="storedImage : ${collectibleSlot.storedImages}"
-                     th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
-                    <div class="thumbnail">
-                        <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
-                             data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>
-                        <div class="caption">
-                            <p th:text="${storedImage.caption}"></p>
-                        </div>
-                        <form class="form-inline" action="#" 
-                              th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
-                            <input type="submit" value="Poista" class="btn btn-danger" />
-                        </form>                        
-                    </div>                    
-                </div>
-            </div>
-            
-            <h3>Kokoelman kohteet</h3>
-            <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-primary">
-                Lisää kohde</a>
+
+            <div class="parentset-header">
+                <span class="set-title">Kokoelman kohteet</span>
+                <a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default set-button">
+                    Lisää kohde
+                </a>
+            </div>            
             <section th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                 <article class="item-listing">
-                    <p th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}">
+                    <p th:text="|${#dates.format(collectibleItem.acquisitionDate, 'd.M.yyyy')} 
+                                ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2, 'COMMA')} eur|">
                         Kohteen hankintapvm ja -hinta
                     </p>
                     <p th:text="${collectibleItem.comment}">Kommentti</p>
@@ -95,13 +79,50 @@
                                 </div>
                                 <form class="form-inline" action="#" 
                                       th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
-                                    <input type="submit" value="Poista" class="btn btn-danger" />
+                                    <input type="submit" value="Poista" class="btn btn-danger btn-xs" />
                                 </form>
                             </div>                            
                         </div>
                     </div>
                 </article>
             </section>
+            
+            <div class="parentset-header">
+                <span class="set-title">Havainnot</span>
+                <a href="#" th:href="@{/havainnot/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default set-button">
+                    Lisää havainto
+                </a>
+            </div>            
+            <div th:each="itemSighting : ${collectibleSlot.itemSightings}">
+                <a href="#" th:href="@{/havainnot/{id}/muokkaa(id=${itemSighting.id})}">
+                    <span th:text="|${itemSighting.salesVenue.name} 
+                                    ${#dates.format(itemSighting.sightingDate, 'd.M.yyyy')} 
+                                    ${#numbers.formatDecimal(itemSighting.price, 1, 2, 'COMMA')} eur|"></span>
+                </a>
+            </div>
+                        
+            <div class="parentset-header">
+                <span class="set-title">Referenssikuvat</span>
+                <a href="#" th:href="@{/kuvat/lisaa(collectibleSlotId=${collectibleSlot.id})}" class="btn btn-default set-button">
+                    Lisää kuva
+                </a>
+            </div>            
+            <div class="image-row">
+                <div th:each="storedImage : ${collectibleSlot.storedImages}"
+                     th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
+                    <div class="thumbnail">
+                        <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
+                             data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>
+                        <div class="caption">
+                            <p th:text="${storedImage.caption}"></p>
+                        </div>
+                        <form class="form-inline" action="#" 
+                              th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
+                            <input type="submit" value="Poista" class="btn btn-danger btn-xs" />
+                        </form>                        
+                    </div>                    
+                </div>
+            </div>
                     
             <div id="large-image-modal" class="modal fade" role="dialog">
                 <div class="modal-dialog">

@@ -1,6 +1,8 @@
 package pandora.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,8 +97,12 @@ public class CollectibleSetService {
                 collectibleSetRepository.save(childSet);
             }
             collectibleCollectionService.removeCollectibleSet(collectibleSet);
+            List<Long> removableSlotIds = new ArrayList<>();
             for(CollectibleSlot collectibleSlot : collectibleSet.getCollectibleSlots()) {
-                collectibleSlotService.delete(collectibleSlot.getId(), currentUser);
+                removableSlotIds.add(collectibleSlot.getId());                
+            }
+            for(Long removableSlotId : removableSlotIds) {
+                collectibleSlotService.delete(removableSlotId, currentUser);
             }
             collectibleSetRepository.delete(id);
         }
@@ -104,11 +110,33 @@ public class CollectibleSetService {
     }
 
     public void removeCollectibleSlot(CollectibleSlot collectibleSlot) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CollectibleSet collectibleSet = collectibleSlot.getCollectibleSet();
+        if(collectibleSet != null) {
+            List<CollectibleSlot> matches = 
+                    collectibleSet.getCollectibleSlots()
+                    .stream()
+                    .filter(p->p.getId().equals(collectibleSlot.getId()))
+                    .collect(Collectors.toList());
+            for(CollectibleSlot match : matches) {
+                collectibleSet.getCollectibleSlots().remove(match);
+            }
+            collectibleSetRepository.save(collectibleSet);
+        }
     }
 
     private void removeChildSet(CollectibleSet collectibleSet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CollectibleSet parent = collectibleSet.getParentSet();
+        if(parent != null) {
+            List<CollectibleSet> matches =
+                    parent.getChildSets()
+                    .stream()
+                    .filter(p->p.getId().equals(collectibleSet.getId()))
+                    .collect(Collectors.toList());
+            for(CollectibleSet match : matches) {
+                parent.getChildSets().remove(match);
+            }
+            collectibleSetRepository.save(parent);
+        }
     }
     
 }

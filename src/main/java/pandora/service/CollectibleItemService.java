@@ -1,5 +1,7 @@
 package pandora.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,8 +71,12 @@ public class CollectibleItemService {
         CollectibleItem collectibleItem = findOne(id, currentUser);
         if(collectibleItem != null) {
             collectibleSlotService.removeCollectibleItem(collectibleItem);
+            List<Long> removableImageIds = new ArrayList<>();            
             for(StoredImage storedImage : collectibleItem.getStoredImages()) {
-                storedImageService.delete(storedImage.getId(), currentUser);
+                removableImageIds.add(storedImage.getId());                
+            }
+            for(Long removableImageId : removableImageIds) {
+                storedImageService.delete(removableImageId, currentUser);
             }
             collectibleItemRepository.delete(id);
         }

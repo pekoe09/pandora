@@ -9,7 +9,23 @@
         <div th:fragment="collectibleSet (collectibleSet)">
             <div th:class="${collectibleSet.parentSet} == null ? parentset-header : subset-header">
                 <span th:text="${collectibleSet.name}" class="set-title">Setin nimi</span>			
-                <a href="#" th:href="@{/slotit/lisaa(collectibleSetId=${collectibleSet.id})}" class="btn btn-default set-button">Lisää slotti</a>
+                <!--<a href="#" th:href="@{/slotit/lisaa(collectibleSetId=${collectibleSet.id})}" class="btn btn-default set-button">Lisää slotti</a>-->
+                <div class="dropdown slot-list-button">
+                    <button class="btn btn-warning dropdown-toggle set-button" type="button" data-toggle="dropdown">
+                        Toiminnot
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" th:href="@{/slotit/lisaa(collectibleSetId=${collectibleSet.id})}">Lisää slotti</a></li>
+                        <li><a href="#" th:href="@{/setit/lisaa(collectibleSetId=${collectibleSet.id})}">Lisää alasetti</a></li>
+                        <li><a href="#" th:href="@{/setit/{id}/muokkaa(id=${collectibleSet.id})}">Muokkaa</a></li>
+                        <li>
+                            <form class="form-inline" action="#" th:action="@{/setit/{id}/poista(id=${collectibleSet.id})}" method="post">
+                                <input type="submit" value="Poista" class="li-submit" />
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
 			
             <div th:each="childSet : ${collectibleSet.childSets}">
@@ -30,7 +46,7 @@
                             <span class="slot-list-title" th:text="${collectibleSlot.name}"></span>
                         </a>
                         <div class="dropdown slot-list-button">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
                                 Toiminnot
                                 <span class="caret"></span>
                             </button>
@@ -51,7 +67,7 @@
                         <p th:text="${collectibleSlot.description}"></p>
                         <div th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                             <div class="slot-item-title">Kohteet</div>
-                            <a href="#" th:href="@{/kohteet/{id}(id=${collectibleItem.id})}" class="slot-item-link"> 
+                            <a href="#" th:href="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}" class="slot-item-link"> 
                                 <span th:text="|${#dates.format(collectibleItem.acquisitionDate, 'd.M.yyyy')} 
                                                  ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2, 'COMMA')} eur|"></span>
                             </a>

@@ -1,6 +1,8 @@
 package pandora.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,15 +68,32 @@ public class CollectibleCollectionService {
 
     public CollectibleCollection delete(Long id, User currentUser) {
         CollectibleCollection collectibleCollection = collectibleCollectionRepository.findOne(id);
-        for(CollectibleSet collectibleSet : collectibleCollection.getCollectibleSets()) {
-            collectibleSetService.delete(collectibleSet.getId(), currentUser);
+        if(collectibleCollection != null) {
+            List<Long> removableSetIds = new ArrayList<>();
+            for(CollectibleSet collectibleSet : collectibleCollection.getCollectibleSets()) {
+                removableSetIds.add(collectibleSet.getId());                
+            }
+            for(Long removableSetId : removableSetIds) {
+                collectibleSetService.delete(removableSetId, currentUser);
+            }
+            collectibleCollectionRepository.delete(id);
         }
-        collectibleCollectionRepository.delete(id);
         return collectibleCollection;
     }
 
-    void removeCollectibleSet(CollectibleSet collectibleSet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeCollectibleSet(CollectibleSet collectibleSet) {
+        CollectibleCollection collectibleCollection = collectibleSet.getCollectibleCollection();
+        if(collectibleCollection != null) {
+            List<CollectibleSet> matches = 
+                    collectibleCollection.getCollectibleSets()
+                    .stream()
+                    .filter(p->p.getId().equals(collectibleSet.getId()))
+                    .collect(Collectors.toList());
+            for(CollectibleSet match : matches) {
+                collectibleCollection.getCollectibleSets().remove(match);
+            }
+            collectibleCollectionRepository.save(collectibleCollection);
+        }
     }
     
 }

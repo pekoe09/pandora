@@ -12,7 +12,7 @@
             <h2 th:text="${collectibleItem.collectibleSlot.name}">Slotin nimi</h2>
             <form id="itemForm" role="form" action="#" th:action="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}" th:object="${collectibleItem}" method="post">
                 <input type="hidden" id="id" name="id" th:value="${collectibleItem.id}" />
-                <input type="hidden" id="collectibleSlot" name="collectibleSlot" th:value="${collectibleSlot.id}" />
+                <input type="hidden" id="collectibleSlot" name="collectibleSlot" th:value="${collectibleItem.collectibleSlot.id}" />
                 
                 <div class="form-group">
                     <label for="acquisitionDate">Hankintapäivä</label>

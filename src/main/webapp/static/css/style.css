@@ -141,7 +141,7 @@ table tr th {
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
-    overflow: auto;
+    overflow: visible;
     margin: 5px 0;
 }
 

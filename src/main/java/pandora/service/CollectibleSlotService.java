@@ -1,5 +1,8 @@
 package pandora.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ public class CollectibleSlotService {
     private StoredImageService storedImageService;
     @Autowired
     private CollectibleItemService collectibleItemService;
+    @Autowired
+    private ItemSightingService itemSightingService;
     @Autowired
     private UserService userService;
 
@@ -99,18 +104,33 @@ public class CollectibleSlotService {
         CollectibleSlot collectibleSlot = findOne(id, currentUser);
         if(collectibleSlot != null) {
             collectibleSetService.removeCollectibleSlot(collectibleSlot);
+            List<Long> removableItemIds = new ArrayList<>();
             for(CollectibleItem collectibleItem : collectibleSlot.getCollectibleItems()) {
-                collectibleItemService.delete(collectibleItem.getId(), currentUser);
+                removableItemIds.add(collectibleItem.getId());                
             }
+            for(Long removableItemId : removableItemIds) {
+                collectibleItemService.delete(removableItemId, currentUser);
+            }
+            List<Long> removableImageIds = new ArrayList<>();
             for(StoredImage storedImage : collectibleSlot.getStoredImages()) {
-                storedImageService.delete(storedImage.getId(), currentUser);
+                removableImageIds.add(storedImage.getId());                
+            }
+            for(Long removableImageId : removableImageIds) {
+                storedImageService.delete(removableImageId, currentUser);
+            }
+            List<Long> removableSightingIds = new ArrayList<>();
+            for(ItemSighting itemSighting : collectibleSlot.getItemSightings()) {
+                removableSightingIds.add(itemSighting.getId());                
+            }
+            for(Long removableSightingId : removableSightingIds) {
+                itemSightingService.delete(removableSightingId, currentUser);
             }
             collectibleSlotRepository.delete(id);
         }
         return collectibleSlot;
     }
 
-    void removeStoredImage(StoredImage image) {
+    public void removeStoredImage(StoredImage image) {
         if(image == null) {
             throw new IllegalArgumentException("Kuva puuttuu!");
         }
@@ -126,12 +146,34 @@ public class CollectibleSlotService {
         collectibleSlotRepository.save(collectibleSlot);
     }
 
-    void removeCollectibleItem(CollectibleItem collectibleItem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeCollectibleItem(CollectibleItem collectibleItem) {
+        CollectibleSlot collectibleSlot = collectibleItem.getCollectibleSlot();
+        if(collectibleSlot != null) {
+            List<CollectibleItem> matches = 
+                    collectibleSlot.getCollectibleItems()
+                    .stream()
+                    .filter(p->p.getId().equals(collectibleItem.getId()))
+                    .collect(Collectors.toList());
+            for(CollectibleItem match : matches) {
+                collectibleSlot.getCollectibleItems().remove(match);
+            }
+            collectibleSlotRepository.save(collectibleSlot);
+        }
     }
 
-    void removeItemSighting(ItemSighting itemSighting) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeItemSighting(ItemSighting itemSighting) {
+        CollectibleSlot collectibleSlot = itemSighting.getCollectibleSlot();
+        if(collectibleSlot != null) {
+            List<ItemSighting> matches = 
+                    collectibleSlot.getItemSightings()
+                    .stream()
+                    .filter(p->p.getId().equals(itemSighting.getId()))
+                    .collect(Collectors.toList());
+            for(ItemSighting match : matches) {
+                collectibleSlot.getItemSightings().remove(match);
+            }
+            collectibleSlotRepository.save(collectibleSlot);
+        }
     }
     
 }

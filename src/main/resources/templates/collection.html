@@ -8,7 +8,7 @@
     <body>
         <div th:fragment="content">
             <h1 th:text="${collectibleCollection.name}" class="collection-title">Kokoelman nimi</h1>
-            <a href="#" th:href="@{/setit/lisaa(collectibleCollectionId=${collectibleCollection.id})}" class="btn btn-primary">Lisää setti</a>
+            <a href="#" th:href="@{/setit/lisaa(collectibleCollectionId=${collectibleCollection.id})}" class="btn btn-warning btn-sm">Lisää uusi setti</a>
             <section th:each="collectibleSet : ${collectibleCollection.collectibleSets}">
                 <div th:replace="collectibleset :: collectibleSet (collectibleSet=${collectibleSet})"></div>
             </section>

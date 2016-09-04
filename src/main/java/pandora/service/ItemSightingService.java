@@ -1,6 +1,9 @@
 package pandora.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pandora.domain.ItemSighting;
@@ -9,6 +12,7 @@ import pandora.domain.User;
 import pandora.repository.ItemSightingRepository;
 
 @Service
+@Transactional
 public class ItemSightingService {
     
     @Autowired
@@ -17,6 +21,8 @@ public class ItemSightingService {
     private SalesVenueService salesVenueService;
     @Autowired
     private CollectibleSlotService collectibleSlotService;
+    @Autowired
+    private StoredImageService storedImageService;
     @Autowired
     private UserService userService;
     
@@ -53,17 +59,45 @@ public class ItemSightingService {
         
     public ItemSighting delete(Long id, User currentUser) {
         ItemSighting itemSighting = itemSightingRepository.findOne(id);
-        salesVenueService.removeItemSighting(itemSighting);
-        collectibleSlotService.removeItemSighting(itemSighting);
-        itemSightingRepository.delete(id);
+        if(itemSighting != null) {
+            salesVenueService.removeItemSighting(itemSighting);
+            collectibleSlotService.removeItemSighting(itemSighting);
+            List<Long> removableImageIds = new ArrayList<>();
+            for(StoredImage storedImage : itemSighting.getStoredImages()) {
+                removableImageIds.add(storedImage.getId());                
+            }
+            for(Long removableImageId : removableImageIds) {
+                storedImageService.delete(removableImageId, currentUser);
+            }
+            itemSightingRepository.delete(id);
+        }
         return itemSighting;
     }
 
-    void addStoredImage(Long id, StoredImage storedImage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ItemSighting addStoredImage(Long id, StoredImage image) {
+        ItemSighting itemSighting = itemSightingRepository.findOne(id);
+        if(itemSighting == null) {
+            throw new IllegalArgumentException("Kohdetta ei löydy!");
+        }
+        if(!image.getUser().getId().equals(itemSighting.getUser().getId())) {
+            throw new IllegalArgumentException("Käyttäjän oikeudet eivät riitä operaatioon!");
+        }
+        itemSighting.getStoredImages().add(image);
+        return itemSightingRepository.save(itemSighting);
     }
 
-    void removeStoredImage(StoredImage mainImage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeStoredImage(StoredImage mainImage) {
+        ItemSighting itemSighting = mainImage.getItemSighting();
+        if(itemSighting != null) {
+            List<StoredImage> matches = 
+                    itemSighting.getStoredImages()
+                    .stream()
+                    .filter(p->p.getId().equals(mainImage.getId()))
+                    .collect(Collectors.toList());
+            for(StoredImage match : matches) {
+                itemSighting.getStoredImages().remove(match);
+            }
+            itemSightingRepository.save(itemSighting);
+        }
     }
 }

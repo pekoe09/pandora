@@ -1,6 +1,9 @@
 package pandora.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pandora.domain.ItemSighting;
@@ -9,10 +12,13 @@ import pandora.domain.User;
 import pandora.repository.SalesVenueRepository;
 
 @Service
+@Transactional
 public class SalesVenueService {
     
     @Autowired
     private SalesVenueRepository salesVenueRepository;
+    @Autowired
+    private ItemSightingService itemSightingService;
     @Autowired
     private UserService userService;
     
@@ -60,11 +66,31 @@ public class SalesVenueService {
     
     public SalesVenue delete(Long id, User currentUser) {
         SalesVenue salesVenue = salesVenueRepository.findOne(id);
-        salesVenueRepository.delete(id);
+        if(salesVenue != null) {
+            List<Long> removableSightingIds = new ArrayList<>();
+            for(ItemSighting itemSighting : salesVenue.getItemSightings()) {
+                removableSightingIds.add(itemSighting.getId());                
+            }
+            for(Long removableSightingId : removableSightingIds) {
+                itemSightingService.delete(removableSightingId, currentUser);
+            }
+            salesVenueRepository.delete(id);
+        }
         return salesVenue;
     }
 
-    void removeItemSighting(ItemSighting itemSighting) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeItemSighting(ItemSighting itemSighting) {
+        SalesVenue salesVenue = itemSighting.getSalesVenue();
+        if(salesVenue != null) {
+            List<ItemSighting> matches = 
+                    salesVenue.getItemSightings()
+                    .stream()
+                    .filter(p->p.getId().equals(itemSighting.getId()))
+                    .collect(Collectors.toList());
+            for(ItemSighting match : matches) {
+                salesVenue.getItemSightings().remove(match);
+            }
+            salesVenueRepository.save(salesVenue);
+        }
     }
 }

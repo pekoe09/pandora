@@ -36,6 +36,20 @@ body {
     max-width: 100%;
 }
 
+.modal-content {
+    overflow: auto;
+    padding: 10px;
+}
+
+.modal-content>h3 {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+input[type=file] {
+    background-color: white;
+}
+
 .error {
     border-style: solid;
     border-width: 2px;
@@ -200,7 +214,7 @@ table tr th {
 .li-submit {
     background: transparent;
     border: none;
-    //color: #333;
+    color: #c8c8c8;
     font-weight: 400;
     line-height: 1.42857143;
     padding: 3px 20px;

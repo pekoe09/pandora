@@ -53,6 +53,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="#" th:href="@{/slotit/{id}(id=${collectibleSlot.id})}">Näytä</a></li>
                                 <li><a href="#" th:href="@{/kohteet/lisaa(collectibleSlotId=${collectibleSlot.id})}">Lisää kohde</a></li>
+                                <li><a href="#" th:href="@{/havainnot/lisaa(collectibleSlotId=${collectibleSlot.id})}">Lisää havainto</a></li>
                                 <li><a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}">Muokkaa</a></li>
                                 <li>
                                     <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">

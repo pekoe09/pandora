@@ -38,50 +38,58 @@
             </div>            
             <section th:each="collectibleItem : ${collectibleSlot.collectibleItems}">
                 <article class="item-listing">
-                    <p th:text="|${#dates.format(collectibleItem.acquisitionDate, 'd.M.yyyy')} 
-                                ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2, 'COMMA')} eur|">
-                        Kohteen hankintapvm ja -hinta
-                    </p>
-                    <p th:text="${collectibleItem.comment}">Kommentti</p>
-                    <div class="dropdown item-button">
-                        <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
-                            Toiminnot
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#" th:href="@{/kuvat/lisaa(collectibleItemId=${collectibleItem.id})}">
-                                    Lisää kuva
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" th:href="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}">
-                                    Muokkaa
-                                </a>
-                            </li>
-                            <li>
-                                <form class="form-inline" action="#" 
-                                      th:action="@{/kohteet/{id}/poista(id=${collectibleItem.id})}" method="post">
-                                    <input type="submit" value="Poista" class="li-submit" />
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="image-row">
-                        <div th:each="storedImage : ${collectibleItem.storedImages}" 
-                             th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
-                            <div class="thumbnail">
-                                <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
-                                     data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>       
-                                <div class="caption">
-                                    <p th:text="${storedImage.caption}"></p>
-                                </div>
-                                <form class="form-inline" action="#" 
-                                      th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
-                                    <input type="submit" value="Poista" class="btn btn-danger btn-xs" />
-                                </form>
-                            </div>                            
+                    <div class="slot-list-content">
+                        <div class="slot-list-header">
+                            <span class="slot-list-title" th:text="|${#dates.format(collectibleItem.acquisitionDate, 'd.M.yyyy')} 
+                                        ${#numbers.formatDecimal(collectibleItem.acquisitionPrice, 1, 2, 'COMMA')} eur|">
+                                Kohteen hankintapvm ja -hinta
+                            </span>                        
+                        
+                            <div class="dropdown item-button slot-list-button">
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                                    Toiminnot
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" th:href="@{/kuvat/lisaa(collectibleItemId=${collectibleItem.id})}">
+                                            Lisää kuva
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" th:href="@{/kohteet/{id}/muokkaa(id=${collectibleItem.id})}">
+                                            Muokkaa
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form class="form-inline" action="#" 
+                                              th:action="@{/kohteet/{id}/poista(id=${collectibleItem.id})}" method="post">
+                                            <input type="submit" value="Poista" class="li-submit" />
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="slot-list-body">
+                            <p th:text="${collectibleItem.comment}">Kommentti</p>
+                        </div>
+
+                        <div class="image-row">
+                            <div th:each="storedImage : ${collectibleItem.storedImages}" 
+                                 th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
+                                <div class="thumbnail">
+                                    <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
+                                         data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>       
+                                    <div class="caption">
+                                        <p th:text="${storedImage.caption}"></p>
+                                    </div>
+                                    <form class="form-inline" action="#" 
+                                          th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
+                                        <input type="submit" value="Poista" class="btn btn-danger btn-xs" />
+                                    </form>
+                                </div>                            
+                            </div>
                         </div>
                     </div>
                 </article>

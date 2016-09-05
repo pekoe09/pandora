@@ -21,7 +21,7 @@
                         <li><a href="#" th:href="@{/setit/{id}/muokkaa(id=${collectibleSet.id})}">Muokkaa</a></li>
                         <li>
                             <form class="form-inline" action="#" th:action="@{/setit/{id}/poista(id=${collectibleSet.id})}" method="post">
-                                <input type="submit" value="Poista" class="li-submit" />
+                                <input type="submit" value="Poista" class="li-submit confirm-delete-modal" />
                             </form>
                         </li>
                     </ul>
@@ -57,7 +57,7 @@
                                 <li><a href="#" th:href="@{/slotit/{id}/muokkaa(id=${collectibleSlot.id})}">Muokkaa</a></li>
                                 <li>
                                     <form class="form-inline" action="#" th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
-                                        <input type="submit" value="Poista" class="li-submit" />
+                                        <input type="submit" value="Poista" class="li-submit confirm-delete-modal" />
                                     </form>
                                 </li>
                             </ul>
@@ -77,8 +77,21 @@
                 </div>
 
             </article>
+            
+            <div class="modal fade" id="delete-modal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <h3>Oletko varma että haluat poistaa tiedon?</h3>
+                        <p>Samalla poistetaan kaikki kyseiseen tietoon liitetyt tiedot ja kuvat.</p>
+                        <div>
+                            <button class="btn btn-danger modal-delete">Kyllä</button>
+                            <button class="btn btn-default modal-cancel">Peruuta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
+         
     </body>
 
 </html>

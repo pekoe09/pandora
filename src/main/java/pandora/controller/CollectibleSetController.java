@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,5 +69,20 @@ public class CollectibleSetController {
         }
         String parentSetParam = collectibleSet.getParentSet() != null ? ("/" + collectibleSet.getParentSet().getId()) : "";
         return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId() + parentSetParam;
+    }
+    
+    @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
+    public String delete(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        CollectibleSet collectibleSet = null;
+        User currentUser = userService.getCurrentUser();
+        try {
+            collectibleSet = collectibleSetService.delete(id, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        redirectAttributes.addFlashAttribute("success", "Setti poistettu");
+        return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId();
     }
 }

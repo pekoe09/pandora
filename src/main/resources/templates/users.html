@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
     <head>
-        <title>Pandora - kokoelmat</title>
+        <title>Pandora - käyttäjät</title>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
         <div th:fragment="content">
-            <h1>Kokoelmat</h1>
+            <h1>Käyttäjät</h1>
             
-            <a class="btn btn-warning btn-sm" href="#" th:href="@{/kokoelmat/lisaa}">
-                Lisää uusi kokoelma
+            <a class="btn btn-warning btn-sm" href="#" th:href="@{/kayttajat/lisaa}">
+                Lisää uusi käyttäjä
             </a>
             
-            <article class="listing-s" th:each="collection : ${collectibleCollections}">
+            <article class="listing-s" th:each="user : ${users}">
                 <span class="listing-s-header">
-                    <a href="#" th:href="@{/kokoelmat/{id}(id=${collection.id})}" th:text="${collection.name}"></a>
+                    <a href="#" th:href="@{/kayttajat/{id}/muokkaa(id=${user.id})}" th:text="|${user.firstName} ${user.lastName}|"></a>
                 </span>             
-                <form class="form-inline listing-buttons" action="#" th:action="@{/kokoelmat/{id}/poista(id=${collection.id})}" method="post">
-                    <a href="#" th:href="@{/kokoelmat/{id}/muokkaa(id=${collection.id})}" class="btn btn-primary">Muokkaa</a>
+                <form class="form-inline listing-buttons" action="#" th:action="@{/kayttajat/{id}/poista(id=${user.id})}" method="post">
+                    <a href="#" th:href="@{/kayttajat/{id}/muokkaa(id=${user.id})}" class="btn btn-primary">Muokkaa</a>
                     <input type="submit" value="Poista" class="btn btn-danger confirm-delete-modal" />
                 </form>
-            </article>  
+                <p th:text="|Käyttäjätunnus: ${user.username}|"></p>
+                <p th:text="|Kokoelmia: |"></p>
+            </article>   
             
             <div class="modal fade" id="delete-modal" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <h3>Oletko varma että haluat poistaa kokoelman?</h3>
-                        <p>Samalla poistetaan kaikki kyseiseen kokoelmaan liitetyt tiedot ja kuvat.</p>
+                        <h3>Oletko varma että haluat poistaa käyttäjän?</h3>
+                        <p>Poistoa ei suoriteta jos käyttäjällä on olemassa tallennettuja tietokohteita.</p>
                         <div>
                             <button class="btn btn-danger modal-delete">Kyllä</button>
                             <button class="btn btn-default modal-cancel">Peruuta</button>

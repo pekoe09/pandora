@@ -21,7 +21,7 @@
                     <li>
                         <form class="form-inline" action="#" 
                               th:action="@{/slotit/{id}/poista(id=${collectibleSlot.id})}" method="post">
-                            <input type="submit" value="Poista" class="li-submit" />
+                            <input type="submit" value="Poista" class="li-submit confirm-delete-modal" />
                         </form>
                     </li>
                 </ul>
@@ -64,7 +64,7 @@
                                     <li>
                                         <form class="form-inline" action="#" 
                                               th:action="@{/kohteet/{id}/poista(id=${collectibleItem.id})}" method="post">
-                                            <input type="submit" value="Poista" class="li-submit" />
+                                            <input type="submit" value="Poista" class="li-submit confirm-delete-modal" />
                                         </form>
                                     </li>
                                 </ul>
@@ -86,7 +86,7 @@
                                     </div>
                                     <form class="form-inline" action="#" 
                                           th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
-                                        <input type="submit" value="Poista" class="btn btn-danger btn-xs" />
+                                        <input type="submit" value="Poista" class="btn btn-danger btn-xs confirm-delete-modal" />
                                     </form>
                                 </div>                            
                             </div>
@@ -126,7 +126,7 @@
                         </div>
                         <form class="form-inline" action="#" 
                               th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
-                            <input type="submit" value="Poista" class="btn btn-danger btn-xs" />
+                            <input type="submit" value="Poista" class="btn btn-danger btn-xs confirm-delete-modal" />
                         </form>                        
                     </div>                    
                 </div>
@@ -149,10 +149,24 @@
                 </div>
             </div>
             
+            <div class="modal fade" id="delete-modal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <h3>Oletko varma että haluat poistaa tiedon?</h3>
+                        <p>Samalla poistetaan kaikki tähän liitetyt tiedot.</p>
+                        <div>
+                            <button class="btn btn-danger modal-delete">Kyllä</button>
+                            <button class="btn btn-default modal-cancel">Peruuta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>       
 
         <th:block th:fragment="pagescript">
             <script src="/static/js/image-modal.js"></script>
+            <script src="/static/js/delete-confirm-modal.js"></script>
         </th:block>        
     </body>
 

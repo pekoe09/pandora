@@ -38,7 +38,27 @@
                 <input type="submit" value="Tallenna" class="btn btn-warning" />
                 <a th:href="@{/slotit/{id}(id=${itemSighting.collectibleSlot.id})}" class="btn btn-default">Peruuta</a>
             </form>
+            <form class="form-inline" action="#" th:action="@{/havainnot/{id}/poista(id=${itemSighting.id})}" method="post">
+                <input type="submit" value="Poista" class="btn btn-danger confirm-delete-modal" />
+            </form>
+            
+            <div class="modal fade" id="delete-modal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <h3>Oletko varma että haluat poistaa havainnon?</h3>
+                        <p>Samalla poistetaan kaikki havaintoon liittyvät kuvat.</p>
+                        <div>
+                            <button class="btn btn-danger modal-delete">Kyllä</button>
+                            <button class="btn btn-default modal-cancel">Peruuta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
+        <th:block th:fragment="pagescript">
+            <script src="/static/js/delete-confirm-modal.js"></script>
+        </th:block>  
     </body>
 
 </html>

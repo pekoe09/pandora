@@ -73,6 +73,8 @@
             </div>
         </nav>
         <div class="starter-template">
+            <section class="alert alert-danger" th:if="${error}" th:text="${error}"></section>
+            <section class="alert alert-success" th:if="${success}" th:text="${success}"></section> 
            <div th:include="this :: content"/>
         </div>
     </div>

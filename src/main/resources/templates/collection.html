@@ -13,6 +13,9 @@
                 <div th:replace="collectibleset :: collectibleSet (collectibleSet=${collectibleSet})"></div>
             </section>
         </div>
+        <th:block th:fragment="pagescript">
+            <script src="/static/js/delete-confirm-modal.js"></script>
+        </th:block>
     </body>
 
 </html>

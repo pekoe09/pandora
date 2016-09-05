@@ -133,4 +133,17 @@ public class UserService {
         user.getSalesVenues().add(salesVenue);
         return userRepository.save(user);
     }
+
+    public User delete(Long id) {
+        User user = userRepository.findOne(id);
+        if(user == null) {
+            throw new IllegalArgumentException("Kohdetta ei löydy!");
+        }
+        try {
+            userRepository.delete(id);
+        } catch (Exception exc) {
+            return null;
+        }
+        return user;
+    }
 }

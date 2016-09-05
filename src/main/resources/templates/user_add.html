@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - käyttäjän lisääminen</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Lisää uusi käyttäjä</h1>
+            <form id="userForm" role="form" action="#" th:action="@{/kayttajat/lisaa}" th:object="${user}" method="post">
+                <div class="form-group">
+                    <label for="firstName">Etunimi</label>
+                    <input type="text" id="firstName" name="firstName" class="form-control" th:value="${user.firstName}" />
+                    <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Sukunimi</label>
+                    <input type="text" id="lastName" name="lastName" class="form-control" th:value="${user.lastName}"/>
+                    <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="eMail">Sähköpostiosoite</label>
+                    <input type="text" id="eMail" name="eMail" class="form-control" th:value="${user.eMail}"/>
+                    <p th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">Virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="username">Käyttäjätunnus</label>
+                    <input type="text" id="username" name="username" class="form-control" th:value="${user.username}"/>
+                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="password">Salasana</label>
+                    <input type="text" id="password" name="password" class="form-control" />
+                    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Virheviesti</p>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Salasana uudelleen</label>
+                    <input type="text" id="password2" name="password2" class="form-control" />
+                </div>
+                <div class="form-group checkbox">
+                    <label><input type="checkbox" id="isAdmin" name="isAdmin" th:checked="${user.isAdmin}"/>Admin</label>
+                </div>
+                <input type="submit" value="Tallenna" class ="btn btn-warning" />
+                <a class="btn btn-default" href="#" th:href="@{/kayttajat}">Peruuta</a>
+            </form>
+        </div>
+    </body>
+</html>

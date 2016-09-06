@@ -160,11 +160,15 @@ table tr th {
 }
 
 .subset-header {
-    background-color: #c1e2b3;
+    background-color: lightsteelblue;
+    color: #32383e; 
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin: 5px 0;
 }
 
 .set-title {
-    font-size: 1.2em;
     font-weight: 700;
     font-size: 1.5em;
     margin: 0 5px;
@@ -172,6 +176,11 @@ table tr th {
     display: inline-block;
     vertical-align: middle;
     float: none;
+}
+
+.subset-header .set-title {
+    font-size: 1.2em;
+    margin: 5px;
 }
 
 .set-button {

@@ -68,6 +68,8 @@ public class CollectibleSlotController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()) {
+            model.addAttribute("collectibleSet", collectibleSlot.getCollectibleSet());
+            model.addAttribute("collectibleSlot", collectibleSlot);
             return "collectibleslot_add";
         }
         User currentUser = userService.getCurrentUser();

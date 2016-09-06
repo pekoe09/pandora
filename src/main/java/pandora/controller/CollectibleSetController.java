@@ -67,8 +67,8 @@ public class CollectibleSetController {
         } catch (IllegalArgumentException exc) {
             return "collection_add";
         }
-        String parentSetParam = collectibleSet.getParentSet() != null ? ("/" + collectibleSet.getParentSet().getId()) : "";
-        return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId() + parentSetParam;
+        redirectAttributes.addFlashAttribute("success", "Setti lisätty");
+        return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId();
     }
     
     @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)

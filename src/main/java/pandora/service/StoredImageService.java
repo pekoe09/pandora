@@ -63,7 +63,7 @@ public class StoredImageService {
             thumbnailHeight = 200;
         }
         Thumbnails.of((BufferedImage)ImageIO.read(new BufferedInputStream(image.getInputStream())))
-                                                .size(thumbnailHeight, thumbnailHeight)
+                                                .height(thumbnailHeight)
                                                 .outputFormat("jpg")
                                                 .toOutputStream(os);        
         awsService.deposit(thumbnailImage, new ByteArrayInputStream(os.toByteArray()), os.size());
@@ -110,7 +110,7 @@ public class StoredImageService {
     public StoredImage delete(Long id, User currentUser) {
         StoredImage image = findOne(id, currentUser);
         if(image == null) {
-            throw new IllegalArgumentException("Kuvaa ei löydy!");
+            return null;
         } 
         if(!currentUser.isIsAdmin() && !image.getUser().getId().equals(currentUser.getId())) {
             throw new IllegalArgumentException("Käyttäjällä ei ole oikeuksia tähän objektiin!");
@@ -137,7 +137,7 @@ public class StoredImageService {
         } else if(image.getCollectibleSlot() != null) {
             collectibleSlotService.removeStoredImage(mainImage);
             collectibleSlotService.removeStoredImage(thumbnailImage);
-        } else {
+        } else if(image.getItemSighting() != null) {
             itemSightingService.removeStoredImage(mainImage);
             itemSightingService.removeStoredImage(thumbnailImage);
         }

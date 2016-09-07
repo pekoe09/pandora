@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import pandora.domain.CollectibleItem;
 import pandora.domain.CollectibleSlot;
 import pandora.domain.ItemSighting;
-import pandora.domain.SalesVenue;
 import pandora.domain.StoredImage;
 import pandora.domain.User;
 import pandora.repository.CollectibleSlotRepository;

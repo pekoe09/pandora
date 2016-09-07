@@ -57,8 +57,11 @@ public class StoredImageService {
         thumbnailImage.setItemSighting(storedImage.getItemSighting());
         thumbnailImage = storedImageRepository.save(thumbnailImage);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        int thumbnailHeight = storedImage.getCollectibleItem() != null ? storedImage.getCollectibleItem().getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight()
-                                                                        : storedImage.getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight();
+        int thumbnailHeight = storedImage.getCollectibleItem() != null ? 
+                storedImage.getCollectibleItem().getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight()
+                : storedImage.getCollectibleSlot() != null ?
+                    storedImage.getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight()
+                    :storedImage.getItemSighting().getCollectibleSlot().getCollectibleSet().getCollectibleCollection().getThumbnailHeight();
         if(thumbnailHeight == 0) {
             thumbnailHeight = 200;
         }

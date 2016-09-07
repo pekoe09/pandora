@@ -80,7 +80,7 @@
                                  th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
                                 <div class="thumbnail">
                                     <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
-                                         data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>       
+                                         data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200" class="thumbnail-image"/>       
                                     <div class="caption">
                                         <p th:text="${storedImage.caption}"></p>
                                     </div>
@@ -120,7 +120,7 @@
                      th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
                     <div class="thumbnail">
                         <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
-                             data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200"/>
+                             data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200" class="thumbnail-image"/>
                         <div class="caption">
                             <p th:text="${storedImage.caption}"></p>
                         </div>

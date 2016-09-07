@@ -42,6 +42,46 @@
                 <input type="submit" value="Poista" class="btn btn-danger confirm-delete-modal" />
             </form>
             
+            <div class="parentset-header">
+                <span class="set-title">Kuvat</span>
+                <a href="#" th:href="@{/kuvat/lisaa(itemSightingId=${itemSighting.id})}" class="btn btn-default set-button">
+                    Lisää kuva
+                </a>
+            </div>
+            <div class="image-row">
+                <div th:each="storedImage : ${itemSighting.storedImages}"
+                     th:object="${storedImage}" th:if="${storedImage.isThumbnail}" class="item-image">
+                    <div class="thumbnail">
+                        <img src="#" th:src="@{/kuvat/{id}(id=${storedImage.id})}" 
+                             data-th-attr="data-main-image-id=${storedImage.mainImage.id}" height="200" class="thumbnail-image"/>
+                        <div class="caption">
+                            <p th:text="${storedImage.caption}"></p>
+                        </div>
+                        <form class="form-inline" action="#" 
+                              th:action="@{/kuvat/{id}/poista(id=${storedImage.id})}" method="post">
+                            <input type="submit" value="Poista" class="btn btn-danger btn-xs confirm-delete-modal" />
+                        </form>                        
+                    </div>                    
+                </div>
+            </div>
+            
+            <div id="large-image-modal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p id="large-image-header"></p>
+                        </div>
+                        <div class="modal-body">
+                            <img id="large-image" src="" />
+                            <p id="large-image-caption"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="modal fade" id="delete-modal" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -57,6 +97,7 @@
             
         </div>
         <th:block th:fragment="pagescript">
+            <script src="/static/js/image-modal.js"></script>
             <script src="/static/js/delete-confirm-modal.js"></script>
         </th:block>  
     </body>

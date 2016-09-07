@@ -1,4 +1,4 @@
-$('img').on('click',function()
+$('.thumbnail-image').on('click',function()
     {
         var imageId = $(this).attr('data-main-image-id'); 
         $('#large-image').attr('src','/kuvat/'+imageId);

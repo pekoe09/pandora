@@ -8,12 +8,18 @@
     <body>
         <div th:fragment="content">
             <h1>Lisää kuva</h1>
-            <h2 th:text="(${collectibleSlot} != null) ? ${collectibleSlot.name} : ${collectibleItem.collectibleSlot.name}"></h2>
+            <h2 th:text="(${collectibleSlot} != null) ? 
+                ${collectibleSlot.name} 
+                : ((${collectibleItem} != null) ? 
+                    ${collectibleItem.collectibleSlot.name}
+                    : ${itemSighting.collectibleSlot.name})"></h2>
             <p th:if="${collectibleItem != null}" th:text="${collectibleItem.acquisitionDate + ' ' + collectibleItem.acquisitionPrice}"></p>
+            <p th:if="${itemSighting != null}" th:text="|${itemSighting.salesVenue.name} / ${#numbers.formatDecimal(itemSighting.price, 1, 2, 'COMMA')}|"></p>
             
             <form id="slotForm" role="form" action="#" th:action="@{/kuvat/lisaa}" th:object="${storedImage}" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="collectibleSlot" name="collectibleSlot" th:value="${collectibleSlot} != null ? ${collectibleSlot.id} : null" />
                 <input type="hidden" id="collectibleItem" name="collectibleItem" th:value="${collectibleItem} != null ? ${collectibleItem.id} : null" />
+                <input type="hidden" id="itemSighting" name="itemSighting" th:value="${itemSighting} != null ? ${itemSighting.id} : null" />
                 <div class="form-group">
                     <label for="image">Tiedostopolku</label>
                     <input type="file" name="image" id="image" />
@@ -25,9 +31,12 @@
                 </div>
                 
                 <input type="submit" value="Lisää kuva" class="btn btn-warning" />
-                <a th:href="(${collectibleSlot} != null) 
-                            ? @{/slotit/{id}(id=${collectibleSlot.id})}
-                            : @{/slotit/{id}(id=${collectibleItem.collectibleSlot.id})}" class="btn btn-default">
+                <a th:href="(${collectibleSlot} != null) ?
+                            @{/slotit/{id}(id=${collectibleSlot.id})}
+                            : ((${collectibleItem} != null) ? 
+                                @{/slotit/{id}(id=${collectibleItem.collectibleSlot.id})}
+                                : @{/slotit/{id}(id=${itemSighting.collectibleSlot.id})})" 
+                            class="btn btn-default">
                     Peruuta
                 </a>
             </form>

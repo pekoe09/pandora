@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:include="layout :: page">
+    <head>
+        <title>Pandora - muokkaa settiä</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <h1>Muokkaa settiä</h1>
+            <h2 th:text="${collectibleSet.collectibleCollection.name + ' / ' + collectibleSet.name}">Kokoelman nimi / Setin nimi</h2>
+            <form id="setForm" role="form" action="#" th:action="@{/setit/{id}/muokkaa(id=${collectibleSet.id})}" th:object="${collectibleSet}" method="post">
+                <input type="hidden" id="id" name="id" th:value="${collectibleSet.id}"  />
+                <input type="hidden" id="collectibleCollection" name="collectibleCollection" th:value="${collectibleSet.collectibleCollection.id}" />
+                <input type="hidden" id="parentSet" name="parentSet" th:value="${parentSet != null} ? ${collectibleSet.parentSet.id} : null" />
+                
+                <div class="form-group">
+                    <label for="name">Nimi</label>
+                    <input type="text" id="name" name="name" class="form-control" th:value="${collectibleSet.name}" />
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Virheviesti</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Kuvaus</label>
+                    <textarea id="description" name="description" rows="5" class="form-control" th:text="${collectibleSet.description}"></textarea>
+                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Virheviesti</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ordinality">Järjestysnumero</label>
+                    <input type="number" id="ordinality" name="ordinality" class="form-control" min="1" th:value="${collectibleSet.ordinality}" />
+                </div>
+                
+                <input type="submit" value="Tallenna" class="btn btn-warning" />
+                <a th:href="@{/kokoelmat/{id}(id=${collectibleSet.collectibleCollection.id})}" class="btn btn-default">Peruuta</a>
+            </form>
+        </div>
+    </body>
+
+</html>

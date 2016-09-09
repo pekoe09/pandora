@@ -71,6 +71,41 @@ public class CollectibleSetController {
         return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId();
     }
     
+    @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.GET)
+    public String edit(
+            @PathVariable Long id,
+            Model model) {
+        User currentUser = userService.getCurrentUser();
+        CollectibleSet collectibleSet = null;
+        try {
+            collectibleSet = collectibleSetService.findOne(id, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        model.addAttribute("collectibleSet", collectibleSet);
+        return "collectibleset_edit";
+    }
+    
+    @RequestMapping(value = "/{id}/muokkaa", method = RequestMethod.POST)
+    public String update(
+            Model model,
+            @Valid @ModelAttribute CollectibleSet collectibleSet,
+            BindingResult bindingResult,
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            return "collectibleset_edit";
+        }
+        try {
+            User currentUser = userService.getCurrentUser();
+            collectibleSet = collectibleSetService.save(collectibleSet, currentUser);
+        } catch (IllegalArgumentException exc) {
+            return "redirect:/paasyvirhe";
+        }
+        redirectAttributes.addFlashAttribute("success", "Muutokset tallennettu");
+        return "redirect:/kokoelmat/" + collectibleSet.getCollectibleCollection().getId();
+    }
+    
     @RequestMapping(value = "/{id}/poista", method = RequestMethod.POST)
     public String delete(
             @PathVariable Long id,

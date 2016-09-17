@@ -153,5 +153,5 @@ public class StoredImageService {
         storedImageRepository.delete(thumbnailImage.getId());
         return image;
     }
-
+    // muutos Herokun testaamiseksi
 }
